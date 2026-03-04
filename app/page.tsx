@@ -1,133 +1,40 @@
-"use client";
-
 export default function Home() {
   return (
-    <main className="min-h-screen bg-black text-white scroll-smooth">
-
-      {/* NAVBAR */}
-      <nav className="fixed top-0 w-full bg-black/80 backdrop-blur border-b border-gray-800 z-50">
-        <div className="max-w-6xl mx-auto flex justify-between items-center px-6 py-4">
-          <h1 className="text-xl tracking-widest font-semibold text-blue-400">
-            CORVUS
-          </h1>
-          <div className="space-x-6 text-sm">
-            <a href="#about" className="hover:text-blue-400 transition">Про нас</a>
-            <a href="#catalog" className="hover:text-pink-400 transition">Каталог</a>
-            <a href="#contact" className="hover:text-blue-400 transition">Контакти</a>
-          </div>
-        </div>
-      </nav>
+    <main className="bg-black text-white overflow-hidden">
 
       {/* HERO */}
-      <section className="h-screen flex flex-col items-center justify-center text-center px-6">
-        <h2 className="text-6xl font-bold tracking-wide">
-          CORVUS
-        </h2>
-        <p className="mt-6 max-w-2xl text-gray-400">
-          Підрозділ пілотів у складі 93 ОМБр "Холодний Яр".
-          Технологічна сила. Єдність. Відповідальність.
-        </p>
-        <a
-          href="#catalog"
-          className="mt-10 px-8 py-3 border border-blue-500 text-blue-500 rounded-lg hover:bg-blue-500 hover:text-black transition"
-        >
-          Перейти до каталогу
-        </a>
-      </section>
+      <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-6">
 
-      {/* ABOUT */}
-      <section id="about" className="py-24 px-6 bg-white text-black text-center">
-        <h3 className="text-4xl font-semibold mb-8 text-black">
-          Про нас
-        </h3>
-        <p className="max-w-3xl mx-auto text-gray-700 leading-relaxed">
-          Ми — підрозділ пілотів у складі 93 ОМБр «Холодний Яр».
-          Ми ті, хто захищає спокій, незалежність та суверенітет.
-          Але понад усе — ми сім'я.
-          Наша сила в дисципліні, технологіях та взаємній підтримці.
-        </p>
-      </section>
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-black to-[#0f0f0f] z-0" />
 
-      {/* CATALOG */}
-      <section id="catalog" className="py-24 px-6 bg-black text-white text-center">
-        <h3 className="text-4xl font-semibold mb-16 text-blue-400">
-          Каталог
-        </h3><div className="flex justify-center mb-12">
-  <img
-    src="/shevron.jpg"
-    alt="Шеврон CORVUS"
-    className="w-64 rounded-xl shadow-lg"
-  />
-</div>
+        <div className="relative z-10">
+          <h1 className="text-6xl md:text-8xl font-extrabold tracking-widest neon-text">
+            CORVUS FPV
+          </h1>
 
-        <div className="grid md:grid-cols-3 gap-12 max-w-6xl mx-auto">
+          <p className="mt-6 text-lg md:text-xl text-gray-300 max-w-2xl mx-auto">
+            Перевага в повітрі. Технологія. Контроль.
+          </p>
 
-          {["Футболки", "Брелки", "Шеврони", "Стікери", "Прапори"].map((item, index) => (
-  <div
-    key={index}
-    className="border border-gray-800 p-8 rounded-lg hover:border-pink-500 transition"
-  >
-    {item === "Шеврони" && (
-      <img
-        src="/shevron.jpg"
-        alt="Шеврон CORVUS"
-        className="mx-auto mb-6 w-40 rounded-lg"
-      />
-    )}
-
-    <h4 className="text-xl mb-4">{item}</h4>
-
-    <p className="text-gray-400 text-sm">
-      Лімітована продукція підрозділу CORVUS.
-    </p>
-  </div>
-))}
-
+          <a
+            href="/catalog"
+            className="mt-10 inline-block px-8 py-4 border-2 border-pink-500 text-pink-500 font-bold tracking-wider transition-all duration-300 hover:bg-pink-500 hover:text-black hover:shadow-[0_0_25px_#ff2e88]"
+          >
+            ПЕРЕЙТИ ДО КАТАЛОГУ
+          </a>
         </div>
       </section>
-
-      {/* CONTACT */}
-      <section id="contact" className="py-24 px-6 bg-white text-black text-center">
-        <h3 className="text-4xl font-semibold mb-10">
-          Зв’язок з нами
-        </h3>
-
-        <div className="space-y-4 text-lg">
-          <p>
-            Email:{" "}
-            <a
-              href="mailto:corvus9339@gmail.com"
-              className="text-blue-600 hover:text-pink-500 transition"
-            >
-              corvus9339@gmail.com
-            </a>
-          </p>
-
-          <p>
-            Instagram:{" "}
-            <a
-              href="https://instagram.com/corvus_93ombr"
-              target="_blank"
-              className="text-pink-500 hover:text-blue-600 transition"
-            >
-              @corvus_93ombr
-            </a>
-          </p>
-
-          <p>
-            Telegram:{" "}
-            <span className="text-blue-600">
-              073-758-48-30
-            </span>
-          </p>
-        </div>
-      </section>
-
-      {/* FOOTER */}
-      <footer className="py-8 text-center text-gray-600 border-t border-gray-800 text-sm">
-        © {new Date().getFullYear()} CORVUS | 93 ОМБр "Холодний Яр"
-      </footer>
 
     </main>
   );
-}
+}<section className="py-24 bg-[#0a0a0a] px-6">
+  <h2 className="text-4xl font-bold text-center mb-16">
+    UNIT IDENTITY
+  </h2>
+
+  <div className="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto">
+    <div className="identity-card">CORVUS</div>
+    <div className="identity-card">FPV UNIT</div>
+    <div className="identity-card">AIR DOMINANCE</div>
+  </div>
+</section>
