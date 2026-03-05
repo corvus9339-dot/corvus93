@@ -75,6 +75,14 @@ export default function Catalog() {
           </div>
         ))}
       </div>
-    </main>
-  );
-}
+    <main><main>
+  <section className="hero">
+
+    <img src="/logo.png" className="logo" />
+
+    <h1>Офіційний мерч підрозділу</h1>
+
+    <p>Підтримай підрозділ — придбай мерч</p>
+
+  </section>
+</main>
