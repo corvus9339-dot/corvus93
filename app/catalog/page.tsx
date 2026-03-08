@@ -1,88 +1,121 @@
+"use client";
+
+import { useState } from "react";
+import { useCart } from "../context/CartContext";
+
+const products = [
+  {
+    id: 1,
+    name: "Corvus Футболка",
+    price: 1000,
+    category: "Одяг",
+    image: "/products/shirt.jpg",
+  },
+  {
+    id: 2,
+    name: "Corvus Наліпки",
+    price: 300,
+    category: "Стікери",
+    image: "/products/sticker1.jpg",
+    variants: ["НРК", "Вампір", "Мавік", "ФПВ"],
+  },
+  {
+    id: 3,
+    name: "Corvus Брелок",
+    price: 250,
+    category: "Аксесуари",
+    image: "/products/keychain.jpg" ,
+    variants: ["Рожевий", "Білий", "Зелений", "Червоний","Синій"],
+  },
+  {
+    id: 4,
+    name: "Corvus Прапор",
+    price: 900,
+    category: "Прапори",
+    image: "/products/flag.jpg",
+  },
+  {
+    id: 5,
+    name: "Corvus Шеврон",
+    price: 300,
+    category: "Шеврони",
+    image:"/products/chevron.jpg",
+  },
+];
+
 export default function Catalog() {
-  const products = [
-    {
-      id: 1,
-      name: "Футболка CORVUS FPV",
-      category: "Одяг",
-      description: "Тактичний крій. Щільна бавовна. Принт шеврона.",
-      price: "1100 грн",
-    },
-{
-      id: 2,
-      name: "Шеврон CORVUS",
-      category: "Аксесуари",
-      description: "Вишивка високої деталізації. Липучка Velcro.",
-      price: "400 грн",
-    },
-    {
-      id: 3,
-      name: "Стікерапак CORVUS",
-      category: "Стікери",
-      description: "Набір з 5 неонових стікерів. Вологостійкі.",
-      price: "350 грн",
-    },
-    {
-      id: 4,
-      name: "Прапор CORVUS",
-      category: "Прапори",
-      description: "Розмір 90x150. Щільна тканина. Яскравий принт.",
-      price: "1200 грн",
-    },
-    {
-      id: 5,
-      name: "Брелок шеврон",
-      category: "Аксесуари",
-      description: "3D-друк або ПВХ. Металеве кільце.",
-      price: "400 грн",
-    },
-  ];
+  const { addToCart } = useCart();
+
+  const [selectedVariants, setSelectedVariants] = useState<{[key:number]:string}>({});
+
+  const handleVariantChange = (productId:number, variant:string) => {
+    setSelectedVariants({
+      ...selectedVariants,
+      [productId]: variant,
+    });
+  };
 
   return (
-    <main className="bg-black text-white min-h-screen px-6 py-24">
-      <h1 className="text-5xl font-extrabold text-center mb-6 neon-text">
-        MERCH CORVUS
-      </h1>
+    <div style={{ padding: "40px" }}>
+      <h1>Каталог</h1>
 
-      <p className="text-center text-gray-400 mb-16">
-        Офіційний мерч підрозділу
-      </p>
+      <div className="products-grid">
 
-      <div className="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto">
-        {products.map((product) => (
-          <div
-            key={product.id}
-            className="bg-[#111] p-8 border border-[#222] transition-all duration-300 hover:border-pink-500 hover:shadow-[0_0_30px_#ff2e88] hover:-translate-y-2"
-          >
-            <div className="text-xs text-pink-500 mb-2 tracking-widest">
-              {product.category}
+        {products.map((item) => (
+
+          <div className="product-card" key={item.id}>
+
+            <img src={item.image} alt={item.name} />
+
+            <div className="product-category">
+              {item.category}
             </div>
 
-            <h2 className="text-2xl font-bold mb-4">
-              {product.name}
-            </h2>
-
-            <p className="text-gray-400 mb-6">
-              {product.description}
-            </p>
-
-            <div className="text-xl text-pink-500 font-bold mb-6">
-              {product.price}
+            <div className="product-title">
+              {item.name}
             </div>
 
-            <button className="w-full border border-pink-500 text-pink-500 py-3 transition-all duration-300 hover:bg-pink-500 hover:text-black">
-              Замовити
+            <div className="product-price">
+              {item.price} грн
+            </div>
+
+            {item.variants && (
+              <select
+                style={{ marginTop: "10px" }}
+                onChange={(e) =>
+                  handleVariantChange(item.id, e.target.value)
+                }
+              >
+                {item.variants.map((variant) => (
+                  <option key={variant} value={variant}>
+                    {variant}
+                  </option>
+                ))}
+              </select>
+            )}
+
+            <button
+              className="add-cart"
+              onClick={() =>
+                addToCart({
+                  id: item.id,
+                  name:
+                    item.name +
+                    (selectedVariants[item.id]
+                      ? ` (${selectedVariants[item.id]})`
+                      : ""),
+                  price: item.price,
+                })
+              }
+            >
+              В кошик
             </button>
+
           </div>
+
         ))}
+
       </div>
-    <main><main>
-  <section className="hero">
-
-    <img src="/logo.png" className="logo" />
-
-    <h1>Офіційний мерч підрозділу</h1>
-
-    <p>Підтримай підрозділ — придбай мерч</p>
-
-  </section>
-</main>
+    </div>
+  );
+}
