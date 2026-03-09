@@ -3,7 +3,15 @@ import Link from "next/link";
 export default function Home() {
 
   return (
-    <div style={{padding:"40px"}}>
+  <div
+  style={{
+    padding: "40px",
+    minHeight: "100vh",
+    backgroundImage: "url('/bg.jpg')",
+    backgroundSize: "cover",
+    backgroundPosition: "center"
+  }}
+>
 
       <section style={{marginTop:"40px"}}>
 
