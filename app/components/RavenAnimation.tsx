@@ -14,7 +14,7 @@ onMouseLeave={()=>setFlap(false)}
 className={`raven ${flap ? "flap" : ""}`}
 >
 
-<img src="/raven.png"/>
+<img src="/raven.png" alt="corvus raven" />
 
 </div>
 
