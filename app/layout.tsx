@@ -1,40 +1,9 @@
 import "./globals.css";
+import Link from "next/link";
 
 export const metadata = {
-  title: "Corvus 93 | FPV підрозділ | Підтримка та рекрутинг",
-  description:
-    "Corvus 93 — FPV підрозділ. Підтримайте підрозділ, придбайте мерч або долучайтесь до рекрутингу.",
-  keywords: [
-    "Corvus 93",
-    "FPV підрозділ",
-    "FPV дрони",
-    "військовий мерч",
-    "шеврони FPV",
-    "рекрутинг FPV",
-    "підтримати підрозділ",
-  ],
-  metadataBase: new URL("https://corvus93.com"),
-
-  openGraph: {
-    title: "Corvus 93",
-    description:
-      "FPV підрозділ. Підтримай підрозділ або долучайся до рекрутингу.",
-    url: "https://corvus93.com",
-    siteName: "Corvus 93",
-    images: [
-      {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-      },
-    ],
-    locale: "uk_UA",
-    type: "website",
-  },
-
-  icons: {
-    icon: "/logo.png",
-  },
+  title: "Corvus 93",
+  description: "FPV підрозділ. Мерч, підтримка та рекрутинг.",
 };
 
 export default function RootLayout({
@@ -44,23 +13,29 @@ export default function RootLayout({
 }) {
   return (
     <html lang="uk">
-      <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Organization",
-              name: "Corvus 93",
-              url: "https://corvus93.com",
-              logo: "https://corvus93.com/logo.png",
-              description: "FPV підрозділ. Рекрутинг та підтримка.",
-            }),
-          }}
-        />
-      </head>
+      <body>
 
-      <body>{children}</body>
+        <header className="header">
+
+          <div className="logoBox">
+
+            <div className="raven">
+              <img src="/raven.png" alt="corvus raven" />
+            </div>
+
+            <Link href="/" className="logoText">
+              CORVUS 93
+            </Link>
+
+          </div>
+
+        </header>
+
+        <main className="main">
+          {children}
+        </main>
+
+      </body>
     </html>
   );
 }

@@ -279,3 +279,126 @@ button{
 .add-cart:hover{
   opacity:0.8;
 }
+raven-container{
+  position: fixed;
+  top: 20%;
+  left: -200px;
+  width: 200px;
+  z-index: 9999;
+  pointer-events: none;
+  animation: flyAcross 4s linear forwards;
+}
+.raven{
+
+position:absolute;
+top:10px;
+left:10px;
+
+width:70px;
+
+transition:transform .3s;
+
+}
+
+.raven img{
+
+width:100%;
+
+}
+
+.raven.flap{
+
+animation:flap 0.6s ease-in-out;
+
+}
+
+@keyframes flap{
+
+0%{transform:rotate(0deg) scale(1)}
+
+25%{transform:rotate(-6deg) scale(1.05)}
+
+50%{transform:rotate(6deg) scale(1.05)}
+
+75%{transform:rotate(-4deg)}
+
+100%{transform:rotate(0)}
+
+}
+.header{
+
+position:fixed;
+top:0;
+left:0;
+width:100%;
+
+display:flex;
+align-items:center;
+
+padding:15px 25px;
+
+background:rgba(0,0,0,0.6);
+
+backdrop-filter:blur(6px);
+
+z-index:1000;
+
+}
+
+.logoBox{
+
+display:flex;
+align-items:center;
+gap:10px;
+
+}
+
+.logoText{
+
+color:white;
+font-size:22px;
+font-weight:700;
+text-decoration:none;
+
+}
+
+.main{
+
+padding-top:80px;
+
+}
+
+.raven{
+
+width:55px;
+cursor:pointer;
+
+}
+
+.raven img{
+
+width:100%;
+
+transition:transform .3s;
+
+}
+
+.raven:hover img{
+
+animation:flap .6s ease-in-out;
+
+}
+
+@keyframes flap{
+
+0%{transform:rotate(0)}
+
+25%{transform:rotate(-8deg) scale(1.05)}
+
+50%{transform:rotate(8deg) scale(1.05)}
+
+75%{transform:rotate(-5deg)}
+
+100%{transform:rotate(0)}
+
+}
