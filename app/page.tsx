@@ -17,8 +17,6 @@ export default function Home() {
       }}
     >
 
-      {/* HERO */}
-
       <section style={{ marginTop: "40px" }}>
 
         <h1 style={{ fontSize: "48px", fontWeight: "700" }}>
@@ -32,7 +30,14 @@ export default function Home() {
           бійців необхідним спорядженням.
         </p>
 
-        <div style={{ marginTop: "30px", display: "flex", gap: "20px" }}>
+        <div
+          style={{
+            marginTop: "30px",
+            display: "flex",
+            gap: "20px",
+            flexWrap: "wrap"
+          }}
+        >
 
           <Link href="/catalog">
             <button className="add-cart">
@@ -48,12 +53,17 @@ export default function Home() {
             Підтримати підрозділ
           </a>
 
+          <a
+            href="https://docs.google.com/forms/d/e/1FAIpQLSeK5MeinWZmlexP6zvTTIqo9JQJ-ey1EjQ0q7awoPGr1fehFg/viewform"
+            target="_blank"
+            className="add-cart"
+          >
+            Анкета рекрута
+          </a>
+
         </div>
 
       </section>
-
-
-      {/* ПРО МЕРЧ */}
 
       <section style={{ marginTop: "80px" }}>
 
@@ -63,54 +73,9 @@ export default function Home() {
 
         <p style={{ marginTop: "15px", maxWidth: "600px", lineHeight: "1.6" }}>
           Усі кошти з продажу мерчу використовуються для
-          забезпечення бійців технікою, дронами та
-          необхідним спорядженням.
+          підтримки підрозділу, закупівлі обладнання,
+          дронів та необхідного спорядження для бійців.
         </p>
-
-      </section>
-
-
-      {/* АНКЕТА РЕКРУТА */}
-
-      <section style={{ marginTop: "120px" }}>
-
-        <h2
-          style={{
-            textAlign: "center",
-            fontSize: "36px",
-            marginBottom: "20px"
-          }}
-        >
-          Анкета рекрута
-        </h2>
-
-        <p
-          style={{
-            textAlign: "center",
-            marginBottom: "40px"
-          }}
-        >
-          Якщо ти хочеш долучитися до підрозділу — заповни анкету.
-        </p>
-
-        <div
-          style={{
-            maxWidth: "900px",
-            margin: "0 auto"
-          }}
-        >
-
-          <iframe
-            src="https://docs.google.com/forms/d/e/1FAIpQLSeK5MeinWZmlexP6zvTTIqo9JQJ-ey1EjQ0q7awoPGr1fehFg/viewform?embedded=true"
-            width="100%"
-            height="1800"
-            style={{ border: "none" }}
-            loading="lazy"
-          >
-            Завантаження…
-          </iframe>
-
-        </div>
 
       </section>
 
