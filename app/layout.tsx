@@ -1,50 +1,66 @@
 import "./globals.css";
-import Header from "./components/Header";
-import { CartProvider } from "./context/CartContext";
-import { ReactNode } from "react";
 
 export const metadata = {
-  title: "Corvus 93 — мерч підрозділу",
+  title: "Corvus 93 | FPV підрозділ | Підтримка та рекрутинг",
   description:
-    "Офіційний мерч Corvus 93. Шеврони, стікери, прапори, футболки та інший мерч підрозділу.",
+    "Corvus 93 — FPV підрозділ. Підтримайте підрозділ, придбайте мерч або долучайтесь до рекрутингу.",
   keywords: [
-    "corvus93",
-    "corvus 93",
-    "corvus93 merch",
-    "шеврони",
-    "військові шеврони",
-    "fpv підрозділ",
-    "мерч підрозділу",
+    "Corvus 93",
+    "FPV підрозділ",
+    "FPV дрони",
+    "військовий мерч",
+    "шеврони FPV",
+    "рекрутинг FPV",
+    "підтримати підрозділ",
   ],
+  metadataBase: new URL("https://corvus93.com"),
 
   openGraph: {
-    title: "Corvus 93 Store",
-    description: "Шеврони, стікери, прапори та мерч Corvus 93",
+    title: "Corvus 93",
+    description:
+      "FPV підрозділ. Підтримай підрозділ або долучайся до рекрутингу.",
     url: "https://corvus93.com",
     siteName: "Corvus 93",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+      },
+    ],
     locale: "uk_UA",
     type: "website",
+  },
+
+  icons: {
+    icon: "/logo.png",
   },
 };
 
 export default function RootLayout({
   children,
 }: {
-  children: ReactNode;
+  children: React.ReactNode;
 }) {
   return (
     <html lang="uk">
-      <body>
-        <CartProvider>
-          <Header />
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: "Corvus 93",
+              url: "https://corvus93.com",
+              logo: "https://corvus93.com/logo.png",
+              description: "FPV підрозділ. Рекрутинг та підтримка.",
+            }),
+          }}
+        />
+      </head>
 
-          <main className="container">{children}</main>
-
-          <footer className="footer">
-            <div>© 2026 Corvus Store</div>
-          </footer>
-        </CartProvider>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
