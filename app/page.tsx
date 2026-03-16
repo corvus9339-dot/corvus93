@@ -7,79 +7,102 @@ export default function Home() {
         minHeight: "100vh",
         backgroundColor: "#000",
         color: "white",
-        padding: "120px 40px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "40px",
+        gap: "30px",
       }}
     >
-      <h1
+      {/* Шеврон */}
+      <img
+        src="/patch.png"
+        alt="Corvus Patch"
         style={{
-          fontSize: "64px",
-          fontWeight: "bold",
-          marginBottom: "20px",
+          width: "420px",
+          maxWidth: "90vw",
+          height: "auto",
+          objectFit: "contain",
         }}
-      >
-        CORVUS 93
-      </h1>
+      />
 
-      <p
-        style={{
-          fontSize: "20px",
-          marginBottom: "40px",
-          opacity: "0.8",
-        }}
-      >
-        Офіційний сайт підрозділу. Мерч, рекрутинг та підтримка.
-      </p>
+      {/* Текст */}
+      <div style={{ textAlign: "center", maxWidth: "700px" }}>
+        <h1
+          style={{
+            fontSize: "48px",
+            marginBottom: "15px",
+            fontWeight: "bold",
+          }}
+        >
+          CORVUS 93
+        </h1>
 
-      <div
-        style={{
-          display: "flex",
-          gap: "20px",
-        }}
-      >
-        <Link href="/catalog">
-          <button
-            style={{
-              padding: "12px 26px",
-              fontSize: "16px",
-              borderRadius: "8px",
-              border: "none",
-              background: "#4da3ff",
-              cursor: "pointer",
-            }}
-          >
-            Каталог
-          </button>
-        </Link>
+        <p
+          style={{
+            fontSize: "18px",
+            opacity: "0.8",
+            marginBottom: "30px",
+          }}
+        >
+          Офіційний сайт підрозділу. Мерч, рекрутинг та підтримка.
+        </p>
 
-        <Link href="/about">
-          <button
-            style={{
-              padding: "12px 26px",
-              fontSize: "16px",
-              borderRadius: "8px",
-              border: "none",
-              background: "#4da3ff",
-              cursor: "pointer",
-            }}
-          >
-            Про нас
-          </button>
-        </Link>
+        {/* Кнопки */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: "15px",
+            flexWrap: "wrap",
+          }}
+        >
+          <Link href="/catalog">
+            <button
+              style={{
+                padding: "12px 26px",
+                borderRadius: "8px",
+                border: "none",
+                background: "#4da3ff",
+                cursor: "pointer",
+                fontSize: "16px",
+              }}
+            >
+              Каталог
+            </button>
+          </Link>
 
-        <Link href="/recruit">
-          <button
-            style={{
-              padding: "12px 26px",
-              fontSize: "16px",
-              borderRadius: "8px",
-              border: "none",
-              background: "#ff4444",
-              cursor: "pointer",
-            }}
-          >
-            Анкета рекрута
-          </button>
-        </Link>
+          <Link href="/about">
+            <button
+              style={{
+                padding: "12px 26px",
+                borderRadius: "8px",
+                border: "none",
+                background: "#4da3ff",
+                cursor: "pointer",
+                fontSize: "16px",
+              }}
+            >
+              Про нас
+            </button>
+          </Link>
+
+          <Link href="/recruit">
+            <button
+              style={{
+                padding: "12px 26px",
+                borderRadius: "8px",
+                border: "none",
+                background: "#ff4444",
+                cursor: "pointer",
+                fontSize: "16px",
+              }}
+            >
+              Анкета рекрута
+            </button>
+          </Link>
+        </div>
       </div>
     </div>
   );
