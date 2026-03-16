@@ -1,121 +1,86 @@
 "use client";
 
 import { useState } from "react";
-import { useCart } from "../context/CartContext";
+import Link from "next/link";
 
-const products = [
-  {
-    id: 1,
-    name: "Corvus Футболка",
-    price: 1000,
-    category: "Одяг",
-    image: "/products/shirt.jpg",
-  },
-  {
-    id: 2,
-    name: "Corvus Наліпки",
-    price: 300,
-    category: "Стікери",
-    image: "/products/sticker1.jpg",
-    variants: ["НРК", "Вампір", "Мавік", "ФПВ"],
-  },
-  {
-    id: 3,
-    name: "Corvus Брелок",
-    price: 250,
-    category: "Аксесуари",
-    image: "/products/keychain.jpg" ,
-    variants: ["Рожевий", "Білий", "Зелений", "Червоний","Синій"],
-  },
-  {
-    id: 4,
-    name: "Corvus Прапор",
-    price: 900,
-    category: "Прапори",
-    image: "/products/flag.jpg",
-  },
-  {
-    id: 5,
-    name: "Corvus Шеврон",
-    price: 300,
-    category: "Шеврони",
-    image:"/products/chevron.jpg",
-  },
-];
+export default function Catalog(){
 
-export default function Catalog() {
-  const { addToCart } = useCart();
+const flags = {
+"Небесна кара":"/flags/nebesna_kara.jpg",
+"Corvus - Холодний Яр":"/flags/corvus_holodny_yar.jpg",
+"Крила помсти":"/flags/kryla_pomsty.jpg"
+} as const;
 
-  const [selectedVariants, setSelectedVariants] = useState<{[key:number]:string}>({});
+type FlagKey = keyof typeof flags;
 
-  const handleVariantChange = (productId:number, variant:string) => {
-    setSelectedVariants({
-      ...selectedVariants,
-      [productId]: variant,
-    });
-  };
+const [selectedFlag,setSelectedFlag] =
+useState<FlagKey>("Небесна кара");
 
-  return (
-    <div style={{ padding: "40px" }}>
-      <h1>Каталог</h1>
+return(
 
-      <div className="products-grid">
+<div
+style={{
+padding:"40px",
+minHeight:"100vh",
+background:"#05060a",
+color:"white"
+}}
+>
 
-        {products.map((item) => (
+<h1 style={{fontSize:"42px",marginBottom:"40px"}}>
+Каталог
+</h1>
 
-          <div className="product-card" key={item.id}>
+<div className="products-grid">
 
-            <img src={item.image} alt={item.name} />
+{/* ПРАПОР */}
 
-            <div className="product-category">
-              {item.category}
-            </div>
+<div className="product-card">
 
-            <div className="product-title">
-              {item.name}
-            </div>
+<img
+src={flags[selectedFlag]}
+alt="Corvus прапор"
+/>
 
-            <div className="product-price">
-              {item.price} грн
-            </div>
+<p>Прапори</p>
 
-            {item.variants && (
-              <select
-                style={{ marginTop: "10px" }}
-                onChange={(e) =>
-                  handleVariantChange(item.id, e.target.value)
-                }
-              >
-                {item.variants.map((variant) => (
-                  <option key={variant} value={variant}>
-                    {variant}
-                  </option>
-                ))}
-              </select>
-            )}
+<h3>Corvus Прапор</h3>
 
-            <button
-              className="add-cart"
-              onClick={() =>
-                addToCart({
-                  id: item.id,
-                  name:
-                    item.name +
-                    (selectedVariants[item.id]
-                      ? ` (${selectedVariants[item.id]})`
-                      : ""),
-                  price: item.price,
-                })
-              }
-            >
-              В кошик
-            </button>
+<p style={{color:"#6ec1ff"}}>
+900 грн
+</p>
 
-          </div>
+<select
+value={selectedFlag}
+onChange={(e)=>
+setSelectedFlag(e.target.value as FlagKey)
+}
+>
 
-        ))}
+<option>Небесна кара</option>
+<option>Corvus - Холодний Яр</option>
+<option>Крила помсти</option>
 
-      </div>
-    </div>
-  );
+</select>
+
+<button className="add-cart">
+В кошик
+</button>
+
+</div>
+
+</div>
+
+<Link href="/">
+
+<button style={{marginTop:"40px"}}>
+⬅ Назад
+</button>
+
+</Link>
+
+</div>
+
+);
+
 }
