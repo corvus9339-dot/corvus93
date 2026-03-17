@@ -1,228 +1,228 @@
-"use client";
+import Image from "next/image";
+import fs from "fs";
+import path from "path";
 
-import { useState } from "react";
-import Link from "next/link";
+type ProductItem = {
+  name: string;
+  image: string;
+};
 
-export default function Catalog() {
+type Category = {
+  title: string;
+  items: ProductItem[];
+};
 
-  const flags = {
-    "Небесна кара": "/flags/nebesna_kara.jpg",
-    "Corvus - Холодний Яр": "/flags/corvus_holodny_yar.jpg",
-    "Крила помсти": "/flags/kryla_pomsty.jpg"
-  };
-
-  const [selectedFlag, setSelectedFlag] =
-    useState<keyof typeof flags>("Небесна кара");
-
-  return (
-    <div
-      style={{
-        padding: "60px",
-        minHeight: "100vh",
-        background: "black",
-        color: "white"
-      }}
-    >
-
-      <h1 style={{ fontSize: "48px", marginBottom: "50px" }}>
-        Каталог
-      </h1>
-
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-          gap: "40px"
-        }}
-      >
-
-        {/* ШЕВРОН */}
-
-        <div style={card}>
-          <img
-            src="/products/patch.jpg"
-            alt="Corvus Шеврон"
-            style={image}
-          />
-
-          <p style={category}>Шеврони</p>
-
-          <h3>Corvus Шеврон</h3>
-
-          <p style={price}>300 грн</p>
-
-          <button style={button}>
-            В кошик
-          </button>
-        </div>
-
-
-        {/* БРЕЛОК */}
-
-        <div style={card}>
-          <img
-            src="/products/keychain.jpg"
-            alt="Corvus Брелок"
-            style={image}
-          />
-
-          <p style={category}>Аксесуари</p>
-
-          <h3>Corvus Брелок</h3>
-
-          <p style={price}>250 грн</p>
-
-          <select style={select}>
-            <option>Білий</option>
-            <option>Рожевий</option>
-            <option>Червоний</option>
-            <option>Синій</option>
-          </select>
-
-          <button style={button}>
-            В кошик
-          </button>
-        </div>
-
-
-        {/* СТІКЕРПАК */}
-
-        <div style={card}>
-          <img
-            src="/products/stickers.jpg"
-            alt="Corvus Стікери"
-            style={image}
-          />
-
-          <p style={category}>Стікери</p>
-
-          <h3>Corvus Стікерпак</h3>
-
-          <p style={price}>350 грн</p>
-
-          <select style={select}>
-            <option>НРК</option>
-            <option>FPV</option>
-            <option>Mavic</option>
-            <option>Bomber</option>
-          </select>
-
-          <button style={button}>
-            В кошик
-          </button>
-        </div>
-
-
-        {/* ПРАПОР */}
-
-        <div style={card}>
-          <img
-            src={flags[selectedFlag]}
-            alt="Corvus Прапор"
-            style={image}
-          />
-
-          <p style={category}>Прапори</p>
-          <option>Крила помсти</option>
-          <option>Corvus&Холодний Яр</option>
-          <option>Небесна кара</option>
-
-          <h3>Corvus Прапор</h3>
-
-          <p style={price}>950 грн</p>
-
-          <select
-            value={selectedFlag}
-            onChange={(e) =>
-              setSelectedFlag(e.target.value as keyof typeof flags)
-            }
-            style={select}
-          >
-            {Object.keys(flags).map((flag) => (
-              <option key={flag}>{flag}</option>
-            ))}
-          </select>
-
-          <button style={button}>
-            В кошик
-          </button>
-        </div>
-
-
-        {/* ФУТБОЛКА */}
-
-        <div style={card}>
-          <img
-            src="/products/shirt.jpg"
-            alt="Corvus Футболка"
-            style={image}
-          />
-
-          <p style={category}>Одяг</p>
-
-          <h3>Corvus Футболка</h3>
-
-          <p style={price}>1100 грн</p>
-          <option>FPV HUNTER</option>
-          <option>MAVIC UNIT</option>
-          <option>NIGHT HUNTER</option>
-          <option>IRON RAVENS</option>
-          <button style={button}>
-            В кошик
-          </button>
-        </div>
-
-      </div>
-
-      <div style={{ marginTop: "60px" }}>
-        <Link href="/">
-          <button style={button}>
-            ← Назад
-          </button>
-        </Link>
-      </div>
-
-    </div>
-  );
+function formatFileName(fileName: string) {
+  return fileName
+    .replace(/\.(jpg|jpeg|png|webp|svg)$/i, "")
+    .replace(/[_-]/g, " ")
+    .replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
-const card = {
-  background: "#111",
-  padding: "20px",
-  borderRadius: "10px"
-};
+function getFilesFromFolder(folderPath: string, publicPath: string): ProductItem[] {
+  if (!fs.existsSync(folderPath)) return [];
 
-const image = {
-  width: "100%",
-  borderRadius: "8px"
-};
+  return fs
+    .readdirSync(folderPath)
+    .filter((file) => /\.(jpg|jpeg|png|webp|svg)$/i.test(file))
+    .map((file) => ({
+      name: formatFileName(file),
+      image: `${publicPath}/${file}`,
+    }));
+}
 
-const category = {
-  marginTop: "10px",
-  opacity: "0.7"
-};
+export default function CatalogPage() {
+  const productsPath = path.join(process.cwd(), "public", "products");
+  const flagsPath = path.join(process.cwd(), "public", "flags");
 
-const price = {
-  color: "#aaa"
-};
+  const categories: Category[] = [
+    {
+      title: "Шеврони",
+      items: fs.existsSync(path.join(productsPath, "chevron.jpg"))
+        ? [
+            {
+              name: "Chevron",
+              image: "/products/chevron.jpg",
+            },
+          ]
+        : fs.existsSync(path.join(productsPath, "chevron.png"))
+        ? [
+            {
+              name: "Chevron",
+              image: "/products/chevron.png",
+            },
+          ]
+        : [],
+    },
+    {
+      title: "Брелки",
+      items: getFilesFromFolder(path.join(productsPath, "keychain"), "/products/keychain"),
+    },
+    {
+      title: "Стікерпаки",
+      items: getFilesFromFolder(path.join(productsPath, "stickerpacks"), "/products/stickerpacks"),
+    },
+    {
+      title: "Прапори",
+      items: getFilesFromFolder(flagsPath, "/flags"),
+    },
+    {
+      title: "Футболки",
+      items: getFilesFromFolder(path.join(productsPath, "tshirts"), "/products/tshirts"),
+    },
+  ];
 
-const button = {
-  marginTop: "15px",
-  padding: "10px",
-  width: "100%",
-  background: "white",
-  color: "black",
-  border: "none",
-  borderRadius: "6px",
-  cursor: "pointer"
-};
+  return (
+    <main
+      style={{
+        minHeight: "100vh",
+        backgroundColor: "#0a0a0a",
+        color: "#ffffff",
+        padding: "48px 24px",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: "1280px",
+          margin: "0 auto",
+        }}
+      >
+        <h1
+          style={{
+            fontSize: "42px",
+            fontWeight: 800,
+            marginBottom: "16px",
+            textTransform: "uppercase",
+            letterSpacing: "0.08em",
+          }}
+        >
+          Каталог Corvus
+        </h1>
 
-const select = {
-  marginTop: "10px",
-  padding: "8px",
-  width: "100%",
-  background: "#222",
-  color: "white",
-  border: "1px solid #444",
-  borderRadius: "6px"
-};
+        <p
+          style={{
+            fontSize: "16px",
+            color: "#b3b3b3",
+            marginBottom: "48px",
+          }}
+        >
+          Наш мерч та символіка
+        </p>
+
+        {categories.map((category) => (
+          <section key={category.title} style={{ marginBottom: "64px" }}>
+            <h2
+              style={{
+                fontSize: "28px",
+                fontWeight: 700,
+                marginBottom: "24px",
+                borderLeft: "4px solid #ff4da6",
+                paddingLeft: "12px",
+              }}
+            >
+              {category.title}
+            </h2>
+
+            {category.items.length === 0 ? (
+              <p
+                style={{
+                  color: "#7a7a7a",
+                  fontSize: "15px",
+                }}
+              >
+                У цій категорії поки немає товарів.
+              </p>
+            ) : (
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+                  gap: "24px",
+                }}
+              >
+                {category.items.map((item) => (
+                  <div
+                    key={item.image}
+                    className="catalog-card"
+                    style={{
+                      position: "relative",
+                      overflow: "hidden",
+                      borderRadius: "18px",
+                      border: "1px solid rgba(255,255,255,0.08)",
+                      backgroundColor: "#111111",
+                      transition: "transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease",
+                    }}
+                  >
+                    <div
+                      style={{
+                        position: "relative",
+                        width: "100%",
+                        aspectRatio: "1 / 1",
+                        overflow: "hidden",
+                      }}
+                    >
+                      <Image
+                        src={item.image}
+                        alt={item.name}
+                        fill
+                        style={{
+                          objectFit: "cover",
+                        }}
+                      />
+
+                      <div
+                        className="catalog-overlay"
+                        style={{
+                          position: "absolute",
+                          inset: 0,
+                          background:
+                            "linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.15) 55%, rgba(0,0,0,0.02) 100%)",
+                          display: "flex",
+                          alignItems: "flex-end",
+                          justifyContent: "flex-start",
+                          padding: "16px",
+                          transition: "opacity 0.3s ease",
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontSize: "16px",
+                            fontWeight: 700,
+                            lineHeight: 1.3,
+                            textTransform: "capitalize",
+                          }}
+                        >
+                          {item.name}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+        ))}
+      </div>
+
+      <style>{`
+        .catalog-card:hover {
+          transform: translateY(-6px);
+          box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+          border-color: rgba(255, 77, 166, 0.35);
+        }
+
+        .catalog-card img {
+          transition: transform 0.35s ease;
+        }
+
+        .catalog-card:hover img {
+          transform: scale(1.06);
+        }
+
+        .catalog-card:hover .catalog-overlay {
+          opacity: 1;
+        }
+      `}</style>
+    </main>
+  );
+}
