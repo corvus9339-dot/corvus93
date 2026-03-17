@@ -56,7 +56,7 @@ export default function CatalogPage() {
     },
     {
       title: "Брелки",
-      items: getFilesFromFolder(path.join(productsPath, "keychain"), "/products/keychain"),
+      items: getFilesFromFolder(path.join(productsPath, "keychains"), "/products/keychains"),
     },
     {
       title: "Стікерпаки",
@@ -133,34 +133,36 @@ export default function CatalogPage() {
                 У цій категорії поки немає товарів.
               </p>
             ) : (
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-                  gap: "24px",
-                }}
-              >
-                {category.items.map((item) => (
-                  <div
-                    key={item.image}
-                    className="catalog-card"
-                    style={{
-                      position: "relative",
-                      overflow: "hidden",
-                      borderRadius: "18px",
-                      border: "1px solid rgba(255,255,255,0.08)",
-                      backgroundColor: "#111111",
-                      transition: "transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease",
-                    }}
-                  >
-                    <div
-                      style={{
-                        position: "relative",
-                        width: "100%",
-                        aspectRatio: "1 / 1",
-                        overflow: "hidden",
-                      }}
-                    >
+ <div
+  style={{
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fill, minmax(140px, 140px))",
+    gap: "14px",
+    justifyContent: "start",
+  }}
+>
+   {category.items.map((item) => (
+    <div
+  key={item.image}
+  className="catalog-card"
+  style={{
+    position: "relative",
+    width: "140px",
+    overflow: "hidden",
+    borderRadius: "14px",
+    border: "1px solid rgba(255,255,255,0.08)",
+    backgroundColor: "#111111",
+    transition: "transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease",
+  }}
+>
+<div
+  style={{
+    position: "relative",
+    width: "140px",
+    height: "140px",
+    overflow: "hidden",
+  }}
+>
                       <Image
                         src={item.image}
                         alt={item.name}
