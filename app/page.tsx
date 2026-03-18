@@ -1,8 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 
-const BANK_LINK = "https://send.monobank.ua/jar/81iXYGC7CZ";
-const RECRUIT_LINK = "https://forms.gle/GeiZiZh9VSiq7kbo6"
+const BANK_LINK = "https://send.monobank.ua/jar/https://send.monobank.ua/jar/81iXYGC7CZ";
+const RECRUIT_LINK = "https://forms.gle/XCRHdWe8dtm6q5YH7";
+
 export default function HomePage() {
   return (
     <main
@@ -11,8 +12,8 @@ export default function HomePage() {
         background: "#000",
         color: "#fff",
         overflow: "hidden",
-      }}>
-         <h1>TEST</h1>
+      }}
+    >
       <section
         style={{
           position: "relative",
@@ -38,17 +39,15 @@ export default function HomePage() {
               bottom: "-80px",
               width: "min(90vw, 620px)",
               height: "min(90vw, 620px)",
-              opacity: 0.28,
+              opacity: 0.25,
             }}
           >
             <Image
               src="/products/chevron.jpg"
-              alt="Corvus patch background"
+              alt="Corvus background"
               fill
               priority
-              style={{
-                objectFit: "contain",
-              }}
+              style={{ objectFit: "contain" }}
             />
           </div>
 
@@ -57,7 +56,7 @@ export default function HomePage() {
               position: "absolute",
               inset: 0,
               background:
-                "linear-gradient(90deg, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.72) 45%, rgba(0,0,0,0.88) 100%)",
+                "linear-gradient(90deg, rgba(0,0,0,0.94) 0%, rgba(0,0,0,0.72) 45%, rgba(0,0,0,0.9) 100%)",
             }}
           />
         </div>
@@ -71,14 +70,10 @@ export default function HomePage() {
             margin: "0 auto",
           }}
         >
-          <div
-            style={{
-              maxWidth: "560px",
-            }}
-          >
+          <div style={{ maxWidth: "580px" }}>
             <h1
               style={{
-                fontSize: "clamp(56px, 9vw, 110px)",
+                fontSize: "clamp(56px, 10vw, 110px)",
                 lineHeight: 0.95,
                 fontWeight: 800,
                 margin: 0,
@@ -142,6 +137,7 @@ export default function HomePage() {
       </section>
 
       <section
+        id="about"
         style={{
           background: "#050505",
           padding: "80px 24px",
