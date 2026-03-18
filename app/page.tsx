@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 const BANK_LINK = "https://send.monobank.ua/jar/81iXYGC7CZ";
-const RECRUIT_LINK = "https://forms.gle/https://forms.gle/GeiZiZh9VSiq7kbo6"
+const RECRUIT_LINK = "https://forms.gle/GeiZiZh9VSiq7kbo6"
 export default function HomePage() {
   return (
     <main
@@ -11,8 +11,8 @@ export default function HomePage() {
         background: "#000",
         color: "#fff",
         overflow: "hidden",
-      }}
-    >
+      }}>
+         <h1>TEST</h1>
       <section
         style={{
           position: "relative",
