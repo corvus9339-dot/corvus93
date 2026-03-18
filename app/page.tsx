@@ -1,129 +1,98 @@
 import Link from "next/link";
 
-export default function Home() {
+export default function HomePage() {
   return (
     <main
       style={{
         minHeight: "100vh",
-        backgroundColor: "black",
-        color: "white",
-        padding: "100px 80px",
-        position: "relative",
-        overflow: "hidden",
+        background: "#0a0a0a",
+        color: "#fff",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "24px",
       }}
     >
-      {/* Фоновий шеврон */}
-      <img
-        src="/patch.png"
-        alt="Corvus Patch"
+      <div
         style={{
-          position: "absolute",
-          right: "120px",
-          top: "120px",
-          width: "500px",
-          opacity: "0.2",
+          textAlign: "center",
+          maxWidth: "900px",
+          width: "100%",
         }}
-      />
-
-      <div style={{ maxWidth: "650px" }}>
+      >
         <h1
           style={{
-            fontSize: "56px",
-            marginBottom: "20px",
+            fontSize: "48px",
+            fontWeight: 800,
+            marginBottom: "16px",
           }}
         >
-          Corvus Merch
+          Corvus 93
         </h1>
 
         <p
           style={{
+            color: "#b3b3b3",
+            marginBottom: "32px",
             fontSize: "18px",
-            lineHeight: "1.6",
-            marginBottom: "30px",
           }}
         >
-          Мерч підрозділу Corvus створений для підтримки бійців та збору коштів
-          на потреби підрозділу. Купуючи наш мерч — ви допомагаєте забезпечувати
-          бійців необхідним спорядженням.
+          Мерч підрозділу
         </p>
 
         <div
           style={{
             display: "flex",
-            gap: "15px",
-            marginBottom: "60px",
+            gap: "16px",
+            justifyContent: "center",
             flexWrap: "wrap",
           }}
         >
-          <Link href="/catalog">
-            <button
-              style={{
-                padding: "12px 24px",
-                backgroundColor: "white",
-                color: "black",
-                border: "none",
-                borderRadius: "8px",
-                cursor: "pointer",
-                fontSize: "16px",
-              }}
-            >
-              Переглянути мерч
-            </button>
-          </Link>
-
-          <button
+          <Link
+            href="/catalog"
             style={{
-              padding: "12px 24px",
-              backgroundColor: "white",
-              color: "black",
-              border: "none",
-              borderRadius: "8px",
-              cursor: "pointer",
-              fontSize: "16px",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              minWidth: "180px",
+              minHeight: "48px",
+              padding: "14px 20px",
+              borderRadius: "12px",
+              background: "#ff4da6",
+              color: "#fff",
+              textDecoration: "none",
+              fontWeight: 700,
+              position: "relative",
+              zIndex: 2,
+              touchAction: "manipulation",
             }}
           >
-            Підтримати підрозділ
-          </button>
+            Перейти в каталог
+          </Link>
 
-          <a
-            href="https://docs.google.com/forms/d/e/1FAIpQLSeK5MeinWZmlexP6zvTTIqo9JQJ-ey1EjQ0q7awoPGr1fehFg/viewform?usp=header"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href="/cart"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              minWidth: "180px",
+              minHeight: "48px",
+              padding: "14px 20px",
+              borderRadius: "12px",
+              background: "#1a1a1a",
+              color: "#fff",
+              textDecoration: "none",
+              fontWeight: 700,
+              border: "1px solid rgba(255,255,255,0.12)",
+              position: "relative",
+              zIndex: 2,
+              touchAction: "manipulation",
+            }}
           >
-            <button
-              style={{
-                padding: "12px 24px",
-                backgroundColor: "white",
-                color: "black",
-                border: "none",
-                borderRadius: "8px",
-                cursor: "pointer",
-                fontSize: "16px",
-              }}
-            >
-              Анкета рекрута
-            </button>
-          </a>
+            Відкрити кошик
+          </Link>
         </div>
-
-        <h2
-          style={{
-            fontSize: "36px",
-            marginBottom: "20px",
-          }}
-        >
-          100% прибутку йде на підтримку підрозділу
-        </h2>
-
-        <p
-          style={{
-            fontSize: "18px",
-            lineHeight: "1.6",
-          }}
-        >
-          Усі кошти з продажу мерчу використовуються для підтримки підрозділу,
-          закупівлі обладнання, дронів та необхідного спорядження для бійців.
-        </p>
       </div>
     </main>
   );

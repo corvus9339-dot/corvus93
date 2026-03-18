@@ -1,94 +1,142 @@
 "use client";
 
-import { useCart } from "@/app/context/CartContext";
+import Image from "next/image";
+import { useCart } from "../context/CartContext";
 
 export default function CartPage() {
-  const { cart, removeFromCart, clearCart } = useCart();
-
-  const total = cart.reduce((sum: number, item: any) => sum + item.price, 0);
-
-  const handleTelegramOrder = () => {
-    if (cart.length === 0) {
-      alert("Кошик порожній");
-      return;
-    }
-
-    const items = cart
-      .map((item: any) => `${item.name} - ${item.price} грн`)
-      .join("\n");
-
-    const message = `Нове замовлення:\n\n${items}\n\nСума: ${total} грн`;
-
-    const telegramUrl = `https://t.me/YOUR_TELEGRAM_USERNAME?text=${encodeURIComponent(
-      message
-    )}`;
-
-    window.open(telegramUrl, "_blank");
-  };
+  const {
+    items,
+    totalItems,
+    increaseItem,
+    decreaseItem,
+    removeItem,
+    clearCart,
+  } = useCart();
 
   return (
-    <div style={{ padding: "40px" }}>
-      <h1>Кошик</h1>
+    <main
+      style={{
+        minHeight: "100vh",
+        background: "#0a0a0a",
+        color: "#fff",
+        padding: "40px 20px",
+      }}
+    >
+      <div style={{ maxWidth: "900px", margin: "0 auto" }}>
+        <h1 style={{ fontSize: "40px", fontWeight: 800, marginBottom: "24px" }}>
+          Кошик
+        </h1>
 
-      {cart.length === 0 ? (
-        <p>Кошик порожній</p>
-      ) : (
-        <>
-          {cart.map((item: any, index: number) => (
+        {items.length === 0 ? (
+          <p>У кошику поки нічого немає.</p>
+        ) : (
+          <>
+            <div style={{ display: "grid", gap: "16px", marginBottom: "24px" }}>
+              {items.map((item) => (
+                <div
+                  key={item.id}
+                  style={{
+                    display: "flex",
+                    gap: "16px",
+                    alignItems: "center",
+                    background: "#111",
+                    borderRadius: "16px",
+                    padding: "14px",
+                  }}
+                >
+                  <div
+                    style={{
+                      position: "relative",
+                      width: "90px",
+                      height: "90px",
+                      borderRadius: "12px",
+                      overflow: "hidden",
+                      flexShrink: 0,
+                    }}
+                  >
+                    <Image
+                      src={item.image}
+                      alt={item.name}
+                      fill
+                      style={{ objectFit: "cover" }}
+                    />
+                  </div>
+
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontWeight: 700 }}>{item.name}</div>
+                  </div>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                    }}
+                  >
+                    <button onClick={() => decreaseItem(item.id)} style={smallButton}>
+                      -
+                    </button>
+
+                    <span style={{ minWidth: "20px", textAlign: "center" }}>
+                      {item.quantity}
+                    </span>
+
+                    <button onClick={() => increaseItem(item.id)} style={smallButton}>
+                      +
+                    </button>
+                  </div>
+
+                  <button onClick={() => removeItem(item.id)} style={deleteButton}>
+                    Видалити
+                  </button>
+                </div>
+              ))}
+            </div>
+
             <div
-              key={`${item.id}-${index}`}
               style={{
-                border: "1px solid #ccc",
-                padding: "15px",
-                marginBottom: "10px",
-                borderRadius: "8px",
+                background: "#111",
+                borderRadius: "16px",
+                padding: "20px",
               }}
             >
-              <h3>{item.name}</h3>
-              <p>{item.price} грн</p>
+              <p style={{ marginBottom: "16px" }}>Товарів у кошику: {totalItems}</p>
 
-              <button
-                onClick={() => removeFromCart(item.id)}
-                style={{
-                  background: "red",
-                  color: "white",
-                  border: "none",
-                  padding: "8px 12px",
-                  cursor: "pointer",
-                }}
-              >
-                Видалити
+              <button onClick={clearCart} style={clearButton}>
+                Очистити кошик
               </button>
             </div>
-          ))}
-
-          <h2>Загальна сума: {total} грн</h2>
-
-          <button
-            onClick={clearCart}
-            style={{
-              marginRight: "10px",
-              padding: "10px 15px",
-              cursor: "pointer",
-            }}
-          >
-            Очистити кошик
-          </button>
-
-          <button
-            onClick={handleTelegramOrder}
-            style={{
-              background: "green",
-              color: "white",
-              border: "none",
-              padding: "10px 15px",
-              cursor: "pointer",
-            }}
-          >
-            Замовити в Telegram
-          </button>
-        </>
-      )}
-    </div>
+          </>
+        )}
+      </div>
+    </main>
   );
 }
+
+const smallButton: React.CSSProperties = {
+  width: "28px",
+  height: "28px",
+  borderRadius: "8px",
+  border: "none",
+  cursor: "pointer",
+  fontWeight: 700,
+};
+
+const deleteButton: React.CSSProperties = {
+  padding: "8px 12px",
+  borderRadius: "10px",
+  border: "none",
+  background: "#2a2a2a",
+  color: "#fff",
+  cursor: "pointer",
+};
+
+const clearButton: React.CSSProperties = {
+  padding: "10px 14px",
+  borderRadius: "10px",
+  border: "none",
+  background: "#ff4da6",
+  color: "#fff",
+  cursor: "pointer",
+  fontWeight: 700,
+};

@@ -1,82 +1,101 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
- export type CartItem = {
-  id: number;
+export type CartItem = {
+  id: string;
   name: string;
-  price: number;
+  image: string;
   quantity: number;
 };
 
 type CartContextType = {
-  cart: CartItem[];
-  addToCart: (product: Omit<CartItem, "quantity">) => void;
-  removeFromCart: (id: number) => void;
-  increaseQuantity: (id: number) => void;
-  decreaseQuantity: (id: number) => void;
+  items: CartItem[];
+  totalItems: number;
+  addItem: (item: Omit<CartItem, "quantity">) => void;
+  removeItem: (id: string) => void;
+  increaseItem: (id: string) => void;
+  decreaseItem: (id: string) => void;
   clearCart: () => void;
 };
 
-const CartContext = createContext<CartContextType | undefined>(undefined);
+const CartContext = createContext<CartContextType | null>(null);
 
-export function CartProvider({ children }: { children: ReactNode }) {
-  const [cart, setCart] = useState<CartItem[]>([]);
+const STORAGE_KEY = "corvus-cart";
 
-  const addToCart = (product: Omit<CartItem, "quantity">) => {
-    setCart((prevCart) => {
-      const existing = prevCart.find((item) => item.id === product.id);
+export function CartProvider({ children }: { children: React.ReactNode }) {
+  const [items, setItems] = useState<CartItem[]>([]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+
+    if (!saved) return;
+
+    try {
+      const parsed = JSON.parse(saved) as CartItem[];
+      setItems(parsed);
+    } catch {
+      localStorage.removeItem(STORAGE_KEY);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  }, [items]);
+
+  const addItem = (item: Omit<CartItem, "quantity">) => {
+    setItems((prev) => {
+      const existing = prev.find((x) => x.id === item.id);
 
       if (existing) {
-        return prevCart.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
+        return prev.map((x) =>
+          x.id === item.id ? { ...x, quantity: x.quantity + 1 } : x
         );
       }
 
-      return [...prevCart, { ...product, quantity: 1 }];
+      return [...prev, { ...item, quantity: 1 }];
     });
   };
 
-  const increaseQuantity = (id: number) => {
-    setCart((prev) =>
+  const removeItem = (id: string) => {
+    setItems((prev) => prev.filter((item) => item.id !== id));
+  };
+
+  const increaseItem = (id: string) => {
+    setItems((prev) =>
       prev.map((item) =>
-        item.id === id
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
+        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
       )
     );
   };
 
-  const decreaseQuantity = (id: number) => {
-    setCart((prev) =>
+  const decreaseItem = (id: string) => {
+    setItems((prev) =>
       prev
         .map((item) =>
-          item.id === id
-            ? { ...item, quantity: item.quantity - 1 }
-            : item
+          item.id === id ? { ...item, quantity: item.quantity - 1 } : item
         )
         .filter((item) => item.quantity > 0)
     );
   };
 
-  const removeFromCart = (id: number) => {
-    setCart((prev) => prev.filter((item) => item.id !== id));
+  const clearCart = () => {
+    setItems([]);
   };
 
-  const clearCart = () => {
-    setCart([]);
-  };
+  const totalItems = useMemo(() => {
+    return items.reduce((sum, item) => sum + item.quantity, 0);
+  }, [items]);
 
   return (
     <CartContext.Provider
       value={{
-        cart,
-        addToCart,
-        removeFromCart,
-        increaseQuantity,
-        decreaseQuantity,
+        items,
+        totalItems,
+        addItem,
+        removeItem,
+        increaseItem,
+        decreaseItem,
         clearCart,
       }}
     >

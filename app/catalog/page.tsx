@@ -1,6 +1,7 @@
 import Image from "next/image";
 import fs from "fs";
 import path from "path";
+import AddToCartButton from "../components/AddToCartButton";
 
 type ProductItem = {
   name: string;
@@ -14,17 +15,17 @@ type Category = {
 
 function formatFileName(fileName: string) {
   return fileName
-    .replace(/\.(jpg|jpeg|png|webp|svg)$/i, "")
+    .replace(/\.(jpg|jpeg|png|webp)$/i, "")
     .replace(/[_-]/g, " ")
-    .replace(/\b\w/g, (char) => char.toUpperCase());
+    .replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
-function getFilesFromFolder(folderPath: string, publicPath: string): ProductItem[] {
+function getFiles(folderPath: string, publicPath: string): ProductItem[] {
   if (!fs.existsSync(folderPath)) return [];
 
   return fs
     .readdirSync(folderPath)
-    .filter((file) => /\.(jpg|jpeg|png|webp|svg)$/i.test(file))
+    .filter((file) => /\.(jpg|jpeg|png|webp)$/i.test(file))
     .map((file) => ({
       name: formatFileName(file),
       image: `${publicPath}/${file}`,
@@ -39,36 +40,24 @@ export default function CatalogPage() {
     {
       title: "Шеврони",
       items: fs.existsSync(path.join(productsPath, "chevron.jpg"))
-        ? [
-            {
-              name: "Chevron",
-              image: "/products/chevron.jpg",
-            },
-          ]
-        : fs.existsSync(path.join(productsPath, "chevron.png"))
-        ? [
-            {
-              name: "Chevron",
-              image: "/products/chevron.png",
-            },
-          ]
+        ? [{ name: "Chevron", image: "/products/chevron.jpg" }]
         : [],
     },
     {
       title: "Брелки",
-      items: getFilesFromFolder(path.join(productsPath, "keychains"), "/products/keychains"),
+      items: getFiles(path.join(productsPath, "keychains"), "/products/keychains"),
     },
     {
       title: "Стікерпаки",
-      items: getFilesFromFolder(path.join(productsPath, "stickerpacks"), "/products/stickerpacks"),
+      items: getFiles(path.join(productsPath, "stickerpacks"), "/products/stickerpacks"),
     },
     {
       title: "Прапори",
-      items: getFilesFromFolder(flagsPath, "/flags"),
+      items: getFiles(flagsPath, "/flags"),
     },
     {
       title: "Футболки",
-      items: getFilesFromFolder(path.join(productsPath, "tshirts"), "/products/tshirts"),
+      items: getFiles(path.join(productsPath, "tshirts"), "/products/tshirts"),
     },
   ];
 
@@ -76,127 +65,89 @@ export default function CatalogPage() {
     <main
       style={{
         minHeight: "100vh",
-        backgroundColor: "#0a0a0a",
-        color: "#ffffff",
-        padding: "48px 24px",
+        background: "#0a0a0a",
+        color: "#fff",
+        padding: "40px 20px",
       }}
     >
-      <div
-        style={{
-          maxWidth: "1280px",
-          margin: "0 auto",
-        }}
-      >
-        <h1
-          style={{
-            fontSize: "42px",
-            fontWeight: 800,
-            marginBottom: "16px",
-            textTransform: "uppercase",
-            letterSpacing: "0.08em",
-          }}
-        >
+      <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+        <h1 style={{ fontSize: "40px", fontWeight: 800, marginBottom: "10px" }}>
           Каталог Corvus
         </h1>
 
-        <p
-          style={{
-            fontSize: "16px",
-            color: "#b3b3b3",
-            marginBottom: "48px",
-          }}
-        >
+        <p style={{ color: "#aaa", marginBottom: "40px" }}>
           Наш мерч та символіка
         </p>
 
         {categories.map((category) => (
-          <section key={category.title} style={{ marginBottom: "64px" }}>
+          <section key={category.title} style={{ marginBottom: "50px" }}>
             <h2
               style={{
-                fontSize: "28px",
+                fontSize: "24px",
                 fontWeight: 700,
-                marginBottom: "24px",
+                marginBottom: "20px",
                 borderLeft: "4px solid #ff4da6",
-                paddingLeft: "12px",
+                paddingLeft: "10px",
               }}
             >
               {category.title}
             </h2>
 
             {category.items.length === 0 ? (
-              <p
+              <p style={{ color: "#777" }}>Поки немає товарів</p>
+            ) : (
+              <div
                 style={{
-                  color: "#7a7a7a",
-                  fontSize: "15px",
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fill, 140px)",
+                  gap: "16px",
                 }}
               >
-                У цій категорії поки немає товарів.
-              </p>
-            ) : (
- <div
-  style={{
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, minmax(140px, 140px))",
-    gap: "14px",
-    justifyContent: "start",
-  }}
->
-   {category.items.map((item) => (
-    <div
-  key={item.image}
-  className="catalog-card"
-  style={{
-    position: "relative",
-    width: "140px",
-    overflow: "hidden",
-    borderRadius: "14px",
-    border: "1px solid rgba(255,255,255,0.08)",
-    backgroundColor: "#111111",
-    transition: "transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease",
-  }}
->
-<div
-  style={{
-    position: "relative",
-    width: "140px",
-    height: "140px",
-    overflow: "hidden",
-  }}
->
+                {category.items.map((item) => (
+                  <div
+                    key={item.image}
+                    style={{
+                      width: "140px",
+                      background: "#111",
+                      borderRadius: "12px",
+                      padding: "8px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        position: "relative",
+                        width: "124px",
+                        height: "124px",
+                        borderRadius: "10px",
+                        overflow: "hidden",
+                        margin: "0 auto",
+                      }}
+                    >
                       <Image
                         src={item.image}
                         alt={item.name}
                         fill
-                        style={{
-                          objectFit: "cover",
-                        }}
+                        style={{ objectFit: "cover" }}
                       />
+                    </div>
 
+                    <div style={{ paddingTop: "8px" }}>
                       <div
-                        className="catalog-overlay"
                         style={{
-                          position: "absolute",
-                          inset: 0,
-                          background:
-                            "linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.15) 55%, rgba(0,0,0,0.02) 100%)",
-                          display: "flex",
-                          alignItems: "flex-end",
-                          justifyContent: "flex-start",
-                          padding: "16px",
-                          transition: "opacity 0.3s ease",
+                          fontSize: "13px",
+                          fontWeight: 700,
+                          textAlign: "center",
+                          minHeight: "32px",
                         }}
                       >
-                        <span
-                          style={{
-                            fontSize: "16px",
-                            fontWeight: 700,
-                            lineHeight: 1.3,
-                            textTransform: "capitalize",
-                          }}
-                        >
-                          {item.name}
-                        </span>
+                        {item.name}
                       </div>
+
+                      <AddToCartButton
+                        id={item.image}
+                        name={item.name}
+                        image={item.image}
+                      />
                     </div>
                   </div>
                 ))}
@@ -205,26 +156,6 @@ export default function CatalogPage() {
           </section>
         ))}
       </div>
-
-      <style>{`
-        .catalog-card:hover {
-          transform: translateY(-6px);
-          box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
-          border-color: rgba(255, 77, 166, 0.35);
-        }
-
-        .catalog-card img {
-          transition: transform 0.35s ease;
-        }
-
-        .catalog-card:hover img {
-          transform: scale(1.06);
-        }
-
-        .catalog-card:hover .catalog-overlay {
-          opacity: 1;
-        }
-      `}</style>
     </main>
   );
 }
