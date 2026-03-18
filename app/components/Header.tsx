@@ -4,40 +4,83 @@ import Link from "next/link";
 import { useCart } from "../context/CartContext";
 
 export default function Header() {
-
-  const { cart } = useCart();
-
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const { totalItems } = useCart();
 
   return (
-    <header style={{
-      display:"flex",
-      justifyContent:"space-between",
-      alignItems:"center",
-      padding:"20px 40px",
-      borderBottom:"1px solid #222"
-    }}>
-
-      <Link href="/">
-        <h2>Corvus</h2>
-      </Link>
-
-      <nav style={{display:"flex",gap:"20px",alignItems:"center"}}>
-
-        <Link href="/catalog">
-          Каталог
+    <header
+      style={{
+        position: "sticky",
+        top: 0,
+        zIndex: 50,
+        background: "#050505",
+        borderBottom: "1px solid rgba(255,255,255,0.08)",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: "1200px",
+          margin: "0 auto",
+          padding: "18px 20px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: "16px",
+        }}
+      >
+        <Link
+          href="/"
+          style={{
+            color: "#fff",
+            textDecoration: "none",
+            fontSize: "22px",
+            fontWeight: 800,
+          }}
+        >
+          Corvus
         </Link>
 
-        <Link href="/profile">
-          Про нас
-        </Link>
+        <nav
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "18px",
+            flexWrap: "wrap",
+          }}
+        >
+          <Link
+            href="/catalog"
+            style={{
+              color: "#fff",
+              textDecoration: "none",
+              fontWeight: 700,
+            }}
+          >
+            Каталог
+          </Link>
 
-        <Link href="/cart">
-          🛒 {totalItems}
-        </Link>
+          <Link
+            href="/#about"
+            style={{
+              color: "#fff",
+              textDecoration: "none",
+              fontWeight: 700,
+            }}
+          >
+            Про нас
+          </Link>
 
-      </nav>
-
+          <Link
+            href="/cart"
+            style={{
+              color: "#fff",
+              textDecoration: "none",
+              fontWeight: 700,
+            }}
+          >
+            🛒 {totalItems}
+          </Link>
+        </nav>
+      </div>
     </header>
   );
 }
