@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { CartProvider } from "./context/CartContext";
+import Header from "./components/Header";
 
 export const metadata: Metadata = {
   title: "Corvus 93",
@@ -15,7 +16,10 @@ export default function RootLayout({
   return (
     <html lang="uk">
       <body>
-        <CartProvider>{children}</CartProvider>
+        <CartProvider>
+          <Header />
+          {children}
+        </CartProvider>
       </body>
     </html>
   );
