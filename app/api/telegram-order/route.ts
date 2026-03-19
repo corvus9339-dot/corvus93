@@ -3,28 +3,29 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
+    const { items } = body;
 
-    const { items, customer } = body;
+    if (!items || items.length === 0) {
+      return NextResponse.json({ error: "No items" }, { status: 400 });
+    }
 
     const token = process.env.TELEGRAM_BOT_TOKEN;
     const chatId = process.env.TELEGRAM_CHAT_ID;
 
     if (!token || !chatId) {
-      return NextResponse.json({ ok: false, error: "No token or chatId" });
+      return NextResponse.json(
+        { error: "Telegram env variables not found" },
+        { status: 500 }
+      );
     }
 
-    const text = `
-🛒 НОВЕ ЗАМОВЛЕННЯ
+    let text = "🛒 НОВЕ ЗАМОВЛЕННЯ\n\n";
 
-👤 Ім'я: ${customer.name}
-📞 Телефон: ${customer.phone}
-💬 Коментар: ${customer.comment || "-"}
+    items.forEach((item: any) => {
+      text += `• ${item.name} x${item.quantity}\n`;
+    });
 
-📦 Товари:
-${items
-  .map((item: any) => `• ${item.name} x${item.quantity}`)
-  .join("\n")}
-`;
+    text += "\n📦 З сайту Corvus93";
 
     const telegramRes = await fetch(
       `https://api.telegram.org/bot${token}/sendMessage`,
@@ -40,10 +41,20 @@ ${items
       }
     );
 
-    const data = await telegramRes.json();
+    const telegramData = await telegramRes.json();
 
-    return NextResponse.json({ ok: true, data });
+    if (!telegramRes.ok) {
+      return NextResponse.json(
+        { error: "Telegram send failed", details: telegramData },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({ success: true });
   } catch (error) {
-    return NextResponse.json({ ok: false, error: "Server error" });
+    return NextResponse.json(
+      { error: "Server error" },
+      { status: 500 }
+    );
   }
 }
