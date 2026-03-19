@@ -55,7 +55,12 @@ export default function CartPage() {
       const data = await res.json();
 
       if (!res.ok || !data.success) {
-        throw new Error(data.error || "Помилка відправки");
+        setMessage(
+          data?.details?.description ||
+            data?.error ||
+            "Не вдалося відправити замовлення"
+        );
+        return;
       }
 
       setMessage("Замовлення відправлено в Telegram ✅");
@@ -63,8 +68,8 @@ export default function CartPage() {
       setName("");
       setPhone("");
       setComment("");
-    } catch {
-      setMessage("Не вдалося відправити замовлення");
+    } catch (error) {
+      setMessage("Помилка з'єднання із сервером");
     } finally {
       setLoading(false);
     }
