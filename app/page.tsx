@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
-const BANK_LINK = "https://send.monobank.ua/jar/https:/send.monobank.ua/jar/81iXYGC7CZ";
-const RECRUIT_LINK = "https://forms.gle/XCRHdWe8dtm6q5YH7";
+const BANK_LINK = "https://send.monobank.ua/jar/https://send.monobank.ua/jar/81iXYGC7CZ";
+const RECRUIT_LINK = "https://https://forms.gle/a9SGAwZv1g29AA5W6";
 
 export default function HomePage() {
   return (
@@ -39,7 +39,7 @@ export default function HomePage() {
               bottom: "-80px",
               width: "min(90vw, 620px)",
               height: "min(90vw, 620px)",
-              opacity: 0.25,
+              opacity: 0.24,
             }}
           >
             <Image
@@ -56,7 +56,7 @@ export default function HomePage() {
               position: "absolute",
               inset: 0,
               background:
-                "linear-gradient(90deg, rgba(0,0,0,0.94) 0%, rgba(0,0,0,0.72) 45%, rgba(0,0,0,0.9) 100%)",
+                "linear-gradient(90deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.72) 45%, rgba(0,0,0,0.9) 100%)",
             }}
           />
         </div>
@@ -70,7 +70,7 @@ export default function HomePage() {
             margin: "0 auto",
           }}
         >
-          <div style={{ maxWidth: "580px" }}>
+          <div style={{ maxWidth: "620px" }}>
             <h1
               style={{
                 fontSize: "clamp(56px, 10vw, 110px)",
@@ -107,7 +107,7 @@ export default function HomePage() {
                 alignItems: "flex-start",
                 gap: "14px",
                 position: "relative",
-                zIndex: 3,
+                zIndex: 5,
               }}
             >
               <Link href="/catalog" style={primaryButton}>
