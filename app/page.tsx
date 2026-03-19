@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
-const BANK_LINK = "https://send.monobank.ua/jar/https://send.monobank.ua/jar/81iXYGC7CZ";
-const RECRUIT_LINK = "https://https://forms.gle/a9SGAwZv1g29AA5W6";
+const BANK_LINK = "https:/send.monobank.ua/jar/https:/send.monobank.ua/jar/81iXYGC7CZ";
+const RECRUIT_LINK = "https:/https:/forms.gle/a9SGAwZv1g29AA5W6";
 
 export default function HomePage() {
   return (
