@@ -4,6 +4,8 @@ import Image from "next/image";
 import { useState } from "react";
 import { useCart } from "../context/CartContext";
 
+const PAYPAL_LINK = process.env.NEXT_PUBLIC_PAYPAL_LINK || "";
+
 export default function CartPage() {
   const {
     items,
@@ -14,12 +16,20 @@ export default function CartPage() {
     clearCart,
   } = useCart();
 
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
   const handleOrder = async () => {
     if (items.length === 0) {
       setMessage("Кошик порожній");
+      return;
+    }
+
+    if (!name.trim() || !phone.trim()) {
+      setMessage("Вкажи ім’я і телефон");
       return;
     }
 
@@ -32,7 +42,14 @@ export default function CartPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ items }),
+        body: JSON.stringify({
+          customer: {
+            name,
+            phone,
+            comment,
+          },
+          items,
+        }),
       });
 
       const data = await res.json();
@@ -43,7 +60,10 @@ export default function CartPage() {
 
       setMessage("Замовлення відправлено в Telegram ✅");
       clearCart();
-    } catch (error) {
+      setName("");
+      setPhone("");
+      setComment("");
+    } catch {
       setMessage("Не вдалося відправити замовлення");
     } finally {
       setLoading(false);
@@ -203,6 +223,30 @@ export default function CartPage() {
                 Товарів у кошику: {totalItems}
               </p>
 
+              <div style={{ display: "grid", gap: "12px", marginBottom: "18px" }}>
+                <input
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Ваше ім’я"
+                  style={inputStyle}
+                />
+
+                <input
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="Телефон"
+                  style={inputStyle}
+                />
+
+                <textarea
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  placeholder="Коментар до замовлення"
+                  rows={4}
+                  style={{ ...inputStyle, resize: "vertical" }}
+                />
+              </div>
+
               <div
                 style={{
                   display: "flex",
@@ -225,6 +269,17 @@ export default function CartPage() {
                 >
                   {loading ? "Відправляємо..." : "Замовити в Telegram"}
                 </button>
+
+                {PAYPAL_LINK ? (
+                  <a
+                    href={PAYPAL_LINK}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={paypalButton}
+                  >
+                    Оплатити / підтримати через PayPal
+                  </a>
+                ) : null}
               </div>
 
               {message ? (
@@ -245,6 +300,16 @@ export default function CartPage() {
     </main>
   );
 }
+
+const inputStyle: React.CSSProperties = {
+  width: "100%",
+  padding: "14px 16px",
+  borderRadius: "12px",
+  border: "1px solid rgba(255,255,255,0.12)",
+  background: "#0d0d0d",
+  color: "#fff",
+  outline: "none",
+};
 
 const smallButton: React.CSSProperties = {
   width: "32px",
@@ -282,5 +347,17 @@ const orderButton: React.CSSProperties = {
   border: "none",
   background: "#ff4da6",
   color: "#fff",
+  fontWeight: 700,
+};
+
+const paypalButton: React.CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  padding: "12px 18px",
+  borderRadius: "12px",
+  background: "#ffffff",
+  color: "#111111",
+  textDecoration: "none",
   fontWeight: 700,
 };

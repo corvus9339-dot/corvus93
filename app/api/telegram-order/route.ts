@@ -1,12 +1,35 @@
 import { NextResponse } from "next/server";
 
+type OrderItem = {
+  id: string;
+  name: string;
+  image: string;
+  quantity: number;
+};
+
+type OrderBody = {
+  customer: {
+    name: string;
+    phone: string;
+    comment?: string;
+  };
+  items: OrderItem[];
+};
+
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
-    const { items } = body;
+    const body = (await req.json()) as OrderBody;
+    const { items, customer } = body;
 
     if (!items || items.length === 0) {
       return NextResponse.json({ error: "No items" }, { status: 400 });
+    }
+
+    if (!customer?.name?.trim() || !customer?.phone?.trim()) {
+      return NextResponse.json(
+        { error: "Ім’я і телефон обов’язкові" },
+        { status: 400 }
+      );
     }
 
     const token = process.env.TELEGRAM_BOT_TOKEN;
@@ -19,13 +42,17 @@ export async function POST(req: Request) {
       );
     }
 
-    let text = "🛒 НОВЕ ЗАМОВЛЕННЯ\n\n";
+    let text = "🛒 НОВЕ ЗАМОВЛЕННЯ CORVUS\n\n";
+    text += `👤 Ім’я: ${customer.name}\n`;
+    text += `📞 Телефон: ${customer.phone}\n`;
+    text += `💬 Коментар: ${customer.comment?.trim() || "-"}\n\n`;
+    text += "📦 Товари:\n";
 
-    items.forEach((item: any) => {
+    items.forEach((item) => {
       text += `• ${item.name} x${item.quantity}\n`;
     });
 
-    text += "\n📦 З сайту Corvus93";
+    text += "\n📍 Надіслано з сайту Corvus93";
 
     const telegramRes = await fetch(
       `https://api.telegram.org/bot${token}/sendMessage`,
@@ -51,10 +78,7 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({ success: true });
-  } catch (error) {
-    return NextResponse.json(
-      { error: "Server error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
