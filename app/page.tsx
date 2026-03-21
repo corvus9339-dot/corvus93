@@ -2,7 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 const BANK_LINK = "https://send.monobank.ua/jar/81iXYGC7CZ";
-const RECRUIT_LINK = "https://forms.gle/nEUrAjig3dA8Jtw7A";
+const RECRUIT_LINK = "https://forms.gle/PVYaKGi8JPot3wxFA";
+
 export default function HomePage() {
   return (
     <main
@@ -21,7 +22,6 @@ export default function HomePage() {
           padding: "100px 20px",
         }}
       >
-        {/* ФОН */}
         <div
           style={{
             position: "absolute",
@@ -50,7 +50,6 @@ export default function HomePage() {
           />
         </div>
 
-        {/* КОНТЕНТ */}
         <div
           style={{
             position: "relative",
@@ -86,7 +85,6 @@ export default function HomePage() {
               необхідним спорядженням.
             </p>
 
-            {/* КНОПКИ */}
             <div
               style={{
                 display: "flex",
@@ -94,12 +92,10 @@ export default function HomePage() {
                 gap: "12px",
               }}
             >
-              {/* ВНУТРІШНЯ */}
               <Link href="/catalog" style={pinkButton}>
                 Переглянути мерч
               </Link>
 
-              {/* ЗОВНІШНІ — ВАЖЛИВО: ТІЛЬКИ <a> */}
               <a
                 href={BANK_LINK}
                 target="_blank"
@@ -119,44 +115,6 @@ export default function HomePage() {
               </a>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* ПРО НАС */}
-      <section
-        style={{
-          padding: "80px 20px",
-          background: "#050505",
-        }}
-      >
-        <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
-          <h2
-            style={{
-              fontSize: "36px",
-              marginBottom: "20px",
-            }}
-          >
-            100% прибутку на підтримку
-          </h2>
-
-          <p
-            style={{
-              color: "#ccc",
-              marginBottom: "20px",
-              lineHeight: 1.6,
-            }}
-          >
-            Увесь прибуток з продажу мерчу спрямовується на потреби підрозділу.
-          </p>
-
-          <a
-            href={BANK_LINK}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={whiteButton}
-          >
-            Підтримати підрозділ
-          </a>
         </div>
       </section>
     </main>

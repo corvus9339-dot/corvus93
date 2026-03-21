@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useCart } from "../context/CartContext";
 
-const BANK_LINK = "https://send.monobank.ua/jar/81iXYGC7CZ";
+const BANK_LINK = "https://send.monobank.ua/jar/ТУТ_ТВОЯ_БАНКА";
 
 export default function Header() {
   const { totalItems } = useCart();
@@ -28,9 +28,9 @@ export default function Header() {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          gap: "16px",
         }}
       >
-        {/* ЛОГО */}
         <Link
           href="/"
           style={{
@@ -43,13 +43,12 @@ export default function Header() {
           Corvus
         </Link>
 
-        {/* ДЕСКТОП */}
         <nav className="desktop-nav">
           <Link href="/catalog" style={navLink}>
             Каталог
           </Link>
 
-          <Link href="/#about" style={navLink}>
+          <Link href="/about" style={navLink}>
             Про нас
           </Link>
 
@@ -67,13 +66,11 @@ export default function Header() {
           </a>
         </nav>
 
-        {/* БУРГЕР */}
         <button onClick={() => setOpen(!open)} style={burger}>
           ☰
         </button>
       </div>
 
-      {/* МОБІЛЬНЕ МЕНЮ */}
       {open && (
         <div
           style={{
@@ -83,15 +80,15 @@ export default function Header() {
           }}
         >
           <div style={{ display: "grid", gap: "12px" }}>
-            <Link href="/catalog" style={mobileLink}>
+            <Link href="/catalog" style={mobileLink} onClick={() => setOpen(false)}>
               Каталог
             </Link>
 
-            <Link href="/#about" style={mobileLink}>
+            <Link href="/about" style={mobileLink} onClick={() => setOpen(false)}>
               Про нас
             </Link>
 
-            <Link href="/cart" style={mobileCart}>
+            <Link href="/cart" style={mobileCart} onClick={() => setOpen(false)}>
               🛒 Кошик ({totalItems})
             </Link>
 
@@ -100,6 +97,7 @@ export default function Header() {
               target="_blank"
               rel="noopener noreferrer"
               style={mobileSupport}
+              onClick={() => setOpen(false)}
             >
               Підтримати підрозділ
             </a>
@@ -107,7 +105,6 @@ export default function Header() {
         </div>
       )}
 
-      {/* СТИЛІ */}
       <style>{`
         .desktop-nav {
           display: flex;
