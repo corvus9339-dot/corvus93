@@ -35,7 +35,11 @@ function getPrice(category: string) {
   return prices[category] ?? 0;
 }
 
-function getFiles(folderPath: string, publicPath: string, categoryKey: string): ProductItem[] {
+function getFiles(
+  folderPath: string,
+  publicPath: string,
+  categoryKey: string
+): ProductItem[] {
   if (!fs.existsSync(folderPath)) return [];
 
   return fs
@@ -72,7 +76,7 @@ export default function CatalogPage() {
         ? [
             {
               id: "chevrons-chevron.jpg",
-              name: "Chevron",
+              name: "Шеврон",
               image: "/products/chevron.jpg",
               price: 300,
             },
@@ -81,7 +85,7 @@ export default function CatalogPage() {
         ? [
             {
               id: "chevrons-chevron.png",
-              name: "Chevron",
+              name: "Шеврон",
               image: "/products/chevron.png",
               price: 300,
             },
