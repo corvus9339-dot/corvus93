@@ -18,6 +18,28 @@ type OrderBody = {
   totalPrice?: number;
 };
 
+function formatDate() {
+  const now = new Date();
+
+  return now.toLocaleString("uk-UA", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+function generateOrderNumber() {
+  const now = new Date();
+  const year = String(now.getFullYear()).slice(-2);
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  const random = Math.floor(1000 + Math.random() * 9000);
+
+  return `CRV-${year}${month}${day}-${random}`;
+}
+
 export async function POST(req: Request) {
   try {
     const body = (await req.json()) as OrderBody;
@@ -50,18 +72,35 @@ export async function POST(req: Request) {
       );
     }
 
-    let text = "🛒 НОВЕ ЗАМОВЛЕННЯ CORVUS\n\n";
-    text += `👤 Ім'я: ${customer.name}\n`;
-    text += `📞 Телефон: ${customer.phone}\n`;
-    text += `💬 Коментар: ${customer.comment?.trim() || "-"}\n\n`;
-    text += "📦 Товари:\n";
+    const orderNumber = generateOrderNumber();
+    const orderDate = formatDate();
+    const calculatedTotal =
+      totalPrice ??
+      items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-    items.forEach((item) => {
-      text += `• ${item.name} x${item.quantity} — ${item.price * item.quantity} грн\n`;
+    let itemsText = "";
+
+    items.forEach((item, index) => {
+      const itemTotal = item.price * item.quantity;
+
+      itemsText +=
+        `${index + 1}. ${item.name}\n` +
+        `   • ${item.quantity} шт × ${item.price} грн = ${itemTotal} грн\n`;
     });
 
-    text += `\n💰 Загальна сума: ${totalPrice ?? 0} грн`;
-    text += "\n📍 Надіслано з сайту Corvus93";
+    const text =
+      `🧾 НОВЕ ЗАМОВЛЕННЯ CORVUS\n\n` +
+      `🔢 Номер: ${orderNumber}\n` +
+      `📅 Дата: ${orderDate}\n\n` +
+      `👤 Клієнт: ${customer.name}\n` +
+      `📞 Телефон: ${customer.phone}\n` +
+      `💬 Коментар: ${customer.comment?.trim() || "-"}\n\n` +
+      `📦 Товари:\n` +
+      `${itemsText}\n` +
+      `🛒 Позицій: ${items.length}\n` +
+      `📍 Одиниць товару: ${items.reduce((sum, item) => sum + item.quantity, 0)}\n` +
+      `💰 Загальна сума: ${calculatedTotal} грн\n\n` +
+      `🌐 Надіслано з сайту Corvus93`;
 
     const telegramRes = await fetch(
       `https://api.telegram.org/bot${token}/sendMessage`,
@@ -90,7 +129,10 @@ export async function POST(req: Request) {
       );
     }
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({
+      success: true,
+      orderNumber,
+    });
   } catch (error) {
     return NextResponse.json(
       {
