@@ -4,6 +4,7 @@ type OrderItem = {
   id: string;
   name: string;
   image: string;
+  price: number;
   quantity: number;
 };
 
@@ -14,12 +15,13 @@ type OrderBody = {
     comment?: string;
   };
   items: OrderItem[];
+  totalPrice?: number;
 };
 
 export async function POST(req: Request) {
   try {
     const body = (await req.json()) as OrderBody;
-    const { items, customer } = body;
+    const { items, customer, totalPrice } = body;
 
     if (!items || items.length === 0) {
       return NextResponse.json(
@@ -55,9 +57,10 @@ export async function POST(req: Request) {
     text += "📦 Товари:\n";
 
     items.forEach((item) => {
-      text += `• ${item.name} x${item.quantity}\n`;
+      text += `• ${item.name} x${item.quantity} — ${item.price * item.quantity} грн\n`;
     });
 
+    text += `\n💰 Загальна сума: ${totalPrice ?? 0} грн`;
     text += "\n📍 Надіслано з сайту Corvus93";
 
     const telegramRes = await fetch(

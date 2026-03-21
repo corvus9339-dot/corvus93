@@ -4,8 +4,10 @@ import path from "path";
 import AddToCartButton from "../components/AddToCartButton";
 
 type ProductItem = {
+  id: string;
   name: string;
   image: string;
+  price: number;
 };
 
 type Category = {
@@ -20,15 +22,30 @@ function formatFileName(fileName: string) {
     .replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
-function getFiles(folderPath: string, publicPath: string): ProductItem[] {
+function getPrice(category: string) {
+  const prices: Record<string, number> = {
+    chevrons: 300,
+    keychain: 250,
+    keychains: 250,
+    stickerpacks: 400,
+    flags: 950,
+    tshirts: 1500,
+  };
+
+  return prices[category] ?? 0;
+}
+
+function getFiles(folderPath: string, publicPath: string, categoryKey: string): ProductItem[] {
   if (!fs.existsSync(folderPath)) return [];
 
   return fs
     .readdirSync(folderPath)
     .filter((file) => /\.(jpg|jpeg|png|webp)$/i.test(file))
     .map((file) => ({
+      id: `${categoryKey}-${file}`,
       name: formatFileName(file),
       image: `${publicPath}/${file}`,
+      price: getPrice(categoryKey),
     }));
 }
 
@@ -36,28 +53,64 @@ export default function CatalogPage() {
   const productsPath = path.join(process.cwd(), "public", "products");
   const flagsPath = path.join(process.cwd(), "public", "flags");
 
+  const keychainItems = getFiles(
+    path.join(productsPath, "keychain"),
+    "/products/keychain",
+    "keychain"
+  );
+
+  const keychainsItems = getFiles(
+    path.join(productsPath, "keychains"),
+    "/products/keychains",
+    "keychains"
+  );
+
   const categories: Category[] = [
     {
       title: "Шеврони",
       items: fs.existsSync(path.join(productsPath, "chevron.jpg"))
-        ? [{ name: "Chevron", image: "/products/chevron.jpg" }]
+        ? [
+            {
+              id: "chevrons-chevron.jpg",
+              name: "Chevron",
+              image: "/products/chevron.jpg",
+              price: 300,
+            },
+          ]
+        : fs.existsSync(path.join(productsPath, "chevron.png"))
+        ? [
+            {
+              id: "chevrons-chevron.png",
+              name: "Chevron",
+              image: "/products/chevron.png",
+              price: 300,
+            },
+          ]
         : [],
     },
     {
       title: "Брелки",
-      items: getFiles(path.join(productsPath, "keychains"), "/products/keychains"),
+      items: keychainItems.length > 0 ? keychainItems : keychainsItems,
     },
     {
       title: "Стікерпаки",
-      items: getFiles(path.join(productsPath, "stickerpacks"), "/products/stickerpacks"),
+      items: getFiles(
+        path.join(productsPath, "stickerpacks"),
+        "/products/stickerpacks",
+        "stickerpacks"
+      ),
     },
     {
       title: "Прапори",
-      items: getFiles(flagsPath, "/flags"),
+      items: getFiles(flagsPath, "/flags", "flags"),
     },
     {
       title: "Футболки",
-      items: getFiles(path.join(productsPath, "tshirts"), "/products/tshirts"),
+      items: getFiles(
+        path.join(productsPath, "tshirts"),
+        "/products/tshirts",
+        "tshirts"
+      ),
     },
   ];
 
@@ -99,15 +152,15 @@ export default function CatalogPage() {
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "repeat(auto-fill, 140px)",
+                  gridTemplateColumns: "repeat(auto-fill, 160px)",
                   gap: "16px",
                 }}
               >
                 {category.items.map((item) => (
                   <div
-                    key={item.image}
+                    key={item.id}
                     style={{
-                      width: "140px",
+                      width: "160px",
                       background: "#111",
                       borderRadius: "12px",
                       padding: "8px",
@@ -116,8 +169,8 @@ export default function CatalogPage() {
                     <div
                       style={{
                         position: "relative",
-                        width: "124px",
-                        height: "124px",
+                        width: "144px",
+                        height: "144px",
                         borderRadius: "10px",
                         overflow: "hidden",
                         margin: "0 auto",
@@ -143,10 +196,23 @@ export default function CatalogPage() {
                         {item.name}
                       </div>
 
+                      <div
+                        style={{
+                          textAlign: "center",
+                          color: "#ff4da6",
+                          fontWeight: 700,
+                          fontSize: "14px",
+                          marginTop: "4px",
+                        }}
+                      >
+                        {item.price} грн
+                      </div>
+
                       <AddToCartButton
-                        id={item.image}
+                        id={item.id}
                         name={item.name}
                         image={item.image}
+                        price={item.price}
                       />
                     </div>
                   </div>

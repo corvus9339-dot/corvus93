@@ -22,6 +22,11 @@ export default function CartPage() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
+  const totalPrice = items.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
+
   const handleOrder = async () => {
     if (items.length === 0) {
       setMessage("Кошик порожній");
@@ -49,6 +54,7 @@ export default function CartPage() {
             comment,
           },
           items,
+          totalPrice,
         }),
       });
 
@@ -162,9 +168,20 @@ export default function CartPage() {
                       style={{
                         color: "#aaa",
                         fontSize: "14px",
+                        marginBottom: "4px",
                       }}
                     >
-                      Кількість: {item.quantity}
+                      {item.price} грн / шт
+                    </div>
+
+                    <div
+                      style={{
+                        color: "#ff4da6",
+                        fontSize: "14px",
+                        fontWeight: 700,
+                      }}
+                    >
+                      {item.price * item.quantity} грн
                     </div>
                   </div>
 
@@ -220,12 +237,24 @@ export default function CartPage() {
               <p
                 style={{
                   marginTop: 0,
-                  marginBottom: "16px",
+                  marginBottom: "8px",
                   fontSize: "18px",
                   fontWeight: 700,
                 }}
               >
                 Товарів у кошику: {totalItems}
+              </p>
+
+              <p
+                style={{
+                  marginTop: 0,
+                  marginBottom: "16px",
+                  fontSize: "20px",
+                  fontWeight: 800,
+                  color: "#ff4da6",
+                }}
+              >
+                Загальна сума: {totalPrice} грн
               </p>
 
               <div style={{ display: "grid", gap: "12px", marginBottom: "18px" }}>

@@ -6,14 +6,22 @@ type Props = {
   id: string;
   name: string;
   image: string;
+  price: number;
 };
 
-export default function AddToCartButton({ id, name, image }: Props) {
+export default function AddToCartButton({ id, name, image, price }: Props) {
   const { addItem } = useCart();
 
   return (
     <button
-      onClick={() => addItem({ id, name, image })}
+      onClick={() =>
+        addItem({
+          id,
+          name,
+          image,
+          price,
+        })
+      }
       style={{
         width: "100%",
         padding: "8px 10px",
