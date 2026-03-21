@@ -66,9 +66,13 @@ export default function Header() {
           </a>
         </nav>
 
-        <button onClick={() => setOpen(!open)} style={burger}>
-          ☰
-        </button>
+        <button
+  onClick={() => setOpen(!open)}
+  style={burger}
+  className="burger-button"
+>
+  ☰
+</button>
       </div>
 
       {open && (
@@ -106,24 +110,26 @@ export default function Header() {
       )}
 
       <style>{`
-        .desktop-nav {
-          display: flex;
-          gap: 18px;
-          align-items: center;
-        }
+  .desktop-nav {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+  }
 
-        @media (max-width: 768px) {
-          .desktop-nav {
-            display: none;
-          }
-        }
+  .burger-button {
+    display: none;
+  }
 
-        @media (min-width: 769px) {
-          button {
-            display: none;
-          }
-        }
-      `}</style>
+  @media (max-width: 768px) {
+    .desktop-nav {
+      display: none;
+    }
+
+    .burger-button {
+      display: inline-flex;
+    }
+  }
+`}</style>
     </header>
   );
 }
