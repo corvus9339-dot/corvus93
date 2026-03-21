@@ -4,11 +4,11 @@ import Link from "next/link";
 import { useState } from "react";
 import { useCart } from "../context/CartContext";
 
-const BANK_LINK = "https://send.monobank.ua/jar/ТУТ_ТВОЯ_БАНКА";
+const BANK_LINK = "https://send.monobank.ua/jar/81iXYGC7CZ";
 
 export default function Header() {
   const { totalItems } = useCart();
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
   return (
     <header
@@ -16,8 +16,7 @@ export default function Header() {
         position: "sticky",
         top: 0,
         zIndex: 100,
-        background: "rgba(5, 5, 5, 0.9)",
-        backdropFilter: "blur(10px)",
+        background: "#050505",
         borderBottom: "1px solid rgba(255,255,255,0.08)",
       }}
     >
@@ -27,136 +26,104 @@ export default function Header() {
           margin: "0 auto",
           padding: "16px 20px",
           display: "flex",
-          alignItems: "center",
           justifyContent: "space-between",
-          gap: "16px",
+          alignItems: "center",
         }}
       >
+        {/* ЛОГО */}
         <Link
           href="/"
           style={{
             color: "#fff",
-            textDecoration: "none",
-            fontSize: "28px",
             fontWeight: 800,
-            letterSpacing: "-0.03em",
+            fontSize: "22px",
+            textDecoration: "none",
           }}
         >
           Corvus
         </Link>
 
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "12px",
-          }}
-        >
-          <nav className="desktop-nav">
-            <Link href="/catalog" style={navLink}>
-              Каталог
-            </Link>
+        {/* ДЕСКТОП */}
+        <nav className="desktop-nav">
+          <Link href="/catalog" style={navLink}>
+            Каталог
+          </Link>
 
-            <Link href="/#about" style={navLink}>
-              Про нас
-            </Link>
+          <Link href="/#about" style={navLink}>
+            Про нас
+          </Link>
 
-            <a
-              href={BANK_LINK}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={supportLink}
-            >
-              Підтримати
-            </a>
+          <Link href="/cart" style={cartLink}>
+            🛒 {totalItems}
+          </Link>
 
-            <Link href="/cart" style={cartLink}>
-              <span>🛒</span>
-              <span>{totalItems}</span>
-            </Link>
-          </nav>
-
-          <button
-            onClick={() => setMenuOpen((prev) => !prev)}
-            aria-label="Меню"
-            className="mobile-menu-button"
-            style={menuButton}
+          <a
+            href={BANK_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={supportButton}
           >
-            ☰
-          </button>
-        </div>
+            Підтримати
+          </a>
+        </nav>
+
+        {/* БУРГЕР */}
+        <button onClick={() => setOpen(!open)} style={burger}>
+          ☰
+        </button>
       </div>
 
-      {menuOpen ? (
+      {/* МОБІЛЬНЕ МЕНЮ */}
+      {open && (
         <div
-          className="mobile-menu"
           style={{
-            borderTop: "1px solid rgba(255,255,255,0.08)",
             background: "#0a0a0a",
-            padding: "16px 20px 20px",
+            padding: "16px 20px",
+            borderTop: "1px solid rgba(255,255,255,0.08)",
           }}
         >
-          <div
-            style={{
-              display: "grid",
-              gap: "12px",
-            }}
-          >
-            <Link
-              href="/catalog"
-              style={mobileNavLink}
-              onClick={() => setMenuOpen(false)}
-            >
+          <div style={{ display: "grid", gap: "12px" }}>
+            <Link href="/catalog" style={mobileLink}>
               Каталог
             </Link>
 
-            <Link
-              href="/#about"
-              style={mobileNavLink}
-              onClick={() => setMenuOpen(false)}
-            >
+            <Link href="/#about" style={mobileLink}>
               Про нас
+            </Link>
+
+            <Link href="/cart" style={mobileCart}>
+              🛒 Кошик ({totalItems})
             </Link>
 
             <a
               href={BANK_LINK}
               target="_blank"
               rel="noopener noreferrer"
-              style={mobileSupportLink}
-              onClick={() => setMenuOpen(false)}
+              style={mobileSupport}
             >
               Підтримати підрозділ
             </a>
-
-            <Link
-              href="/cart"
-              style={mobileCartLink}
-              onClick={() => setMenuOpen(false)}
-            >
-              🛒 Кошик ({totalItems})
-            </Link>
           </div>
         </div>
-      ) : null}
+      )}
 
+      {/* СТИЛІ */}
       <style>{`
         .desktop-nav {
           display: flex;
-          align-items: center;
           gap: 18px;
-        }
-
-        .mobile-menu-button {
-          display: none;
+          align-items: center;
         }
 
         @media (max-width: 768px) {
           .desktop-nav {
             display: none;
           }
+        }
 
-          .mobile-menu-button {
-            display: inline-flex;
+        @media (min-width: 769px) {
+          button {
+            display: none;
           }
         }
       `}</style>
@@ -167,72 +134,59 @@ export default function Header() {
 const navLink: React.CSSProperties = {
   color: "#fff",
   textDecoration: "none",
-  fontWeight: 700,
-  fontSize: "16px",
-};
-
-const supportLink: React.CSSProperties = {
-  color: "#111",
-  background: "#fff",
-  textDecoration: "none",
-  fontWeight: 700,
-  fontSize: "16px",
-  padding: "10px 14px",
-  borderRadius: "12px",
+  fontWeight: 600,
 };
 
 const cartLink: React.CSSProperties = {
-  color: "#fff",
   background: "#ff4da6",
+  padding: "8px 12px",
+  borderRadius: "10px",
+  color: "#fff",
   textDecoration: "none",
-  fontWeight: 800,
-  fontSize: "16px",
-  padding: "10px 14px",
-  borderRadius: "12px",
-  display: "inline-flex",
-  alignItems: "center",
-  gap: "8px",
+  fontWeight: 700,
 };
 
-const menuButton: React.CSSProperties = {
-  width: "44px",
-  height: "44px",
-  borderRadius: "12px",
-  border: "1px solid rgba(255,255,255,0.12)",
+const supportButton: React.CSSProperties = {
+  background: "#fff",
+  color: "#111",
+  padding: "8px 12px",
+  borderRadius: "10px",
+  textDecoration: "none",
+  fontWeight: 700,
+};
+
+const burger: React.CSSProperties = {
   background: "#111",
   color: "#fff",
-  fontSize: "22px",
-  cursor: "pointer",
-  alignItems: "center",
-  justifyContent: "center",
+  border: "none",
+  borderRadius: "8px",
+  width: "40px",
+  height: "40px",
+  fontSize: "20px",
 };
 
-const mobileNavLink: React.CSSProperties = {
+const mobileLink: React.CSSProperties = {
   color: "#fff",
   textDecoration: "none",
   fontWeight: 700,
-  fontSize: "18px",
-  padding: "12px 0",
 };
 
-const mobileSupportLink: React.CSSProperties = {
-  color: "#111",
-  background: "#fff",
-  textDecoration: "none",
-  fontWeight: 700,
-  fontSize: "17px",
-  padding: "14px 16px",
-  borderRadius: "14px",
-  textAlign: "center",
-};
-
-const mobileCartLink: React.CSSProperties = {
-  color: "#fff",
+const mobileCart: React.CSSProperties = {
   background: "#ff4da6",
+  padding: "10px",
+  borderRadius: "10px",
   textDecoration: "none",
-  fontWeight: 800,
-  fontSize: "17px",
-  padding: "14px 16px",
-  borderRadius: "14px",
+  color: "#fff",
   textAlign: "center",
+  fontWeight: 700,
+};
+
+const mobileSupport: React.CSSProperties = {
+  background: "#fff",
+  padding: "10px",
+  borderRadius: "10px",
+  textDecoration: "none",
+  color: "#111",
+  textAlign: "center",
+  fontWeight: 700,
 };
