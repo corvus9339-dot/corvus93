@@ -21,7 +21,6 @@ type CartContextType = {
 };
 
 const CartContext = createContext<CartContextType | null>(null);
-
 const STORAGE_KEY = "corvus-cart";
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
@@ -33,8 +32,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     if (!saved) return;
 
     try {
-      const parsed = JSON.parse(saved) as CartItem[];
-      setItems(parsed);
+      setItems(JSON.parse(saved));
     } catch {
       localStorage.removeItem(STORAGE_KEY);
     }
@@ -80,13 +78,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
-  const clearCart = () => {
-    setItems([]);
-  };
+  const clearCart = () => setItems([]);
 
-  const totalItems = useMemo(() => {
-    return items.reduce((sum, item) => sum + item.quantity, 0);
-  }, [items]);
+  const totalItems = useMemo(
+    () => items.reduce((sum, item) => sum + item.quantity, 0),
+    [items]
+  );
 
   return (
     <CartContext.Provider

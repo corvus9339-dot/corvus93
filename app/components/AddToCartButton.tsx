@@ -24,15 +24,15 @@ export default function AddToCartButton({ id, name, image, price }: Props) {
       }
       style={{
         width: "100%",
-        padding: "8px 10px",
-        borderRadius: "8px",
+        padding: "10px 12px",
+        borderRadius: "10px",
         border: "none",
         background: "#ff4da6",
         color: "#fff",
         fontWeight: 700,
         fontSize: "13px",
         cursor: "pointer",
-        marginTop: "8px",
+        marginTop: "10px",
       }}
     >
       У кошик

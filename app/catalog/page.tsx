@@ -16,10 +16,22 @@ type Category = {
 };
 
 function formatFileName(fileName: string) {
-  return fileName
+  const clean = fileName
     .replace(/\.(jpg|jpeg|png|webp)$/i, "")
     .replace(/[_-]/g, " ")
-    .replace(/\b\w/g, (c) => c.toUpperCase());
+    .toLowerCase();
+
+  const translations: Record<string, string> = {
+    blue: "Брелок синій",
+    green: "Брелок зелений",
+    pink: "Брелок рожевий",
+    red: "Брелок червоний",
+    white: "Брелок білий",
+    black: "Брелок чорний",
+    chevron: "Шеврон",
+  };
+
+  return translations[clean] || clean.charAt(0).toUpperCase() + clean.slice(1);
 }
 
 function getPrice(category: string) {
@@ -156,7 +168,7 @@ export default function CatalogPage() {
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "repeat(auto-fill, 160px)",
+                  gridTemplateColumns: "repeat(auto-fill, 170px)",
                   gap: "16px",
                 }}
               >
@@ -164,17 +176,17 @@ export default function CatalogPage() {
                   <div
                     key={item.id}
                     style={{
-                      width: "160px",
+                      width: "170px",
                       background: "#111",
                       borderRadius: "12px",
-                      padding: "8px",
+                      padding: "10px",
                     }}
                   >
                     <div
                       style={{
                         position: "relative",
-                        width: "144px",
-                        height: "144px",
+                        width: "150px",
+                        height: "150px",
                         borderRadius: "10px",
                         overflow: "hidden",
                         margin: "0 auto",
@@ -188,13 +200,13 @@ export default function CatalogPage() {
                       />
                     </div>
 
-                    <div style={{ paddingTop: "8px" }}>
+                    <div style={{ paddingTop: "10px" }}>
                       <div
                         style={{
                           fontSize: "13px",
                           fontWeight: 700,
                           textAlign: "center",
-                          minHeight: "32px",
+                          minHeight: "34px",
                         }}
                       >
                         {item.name}
