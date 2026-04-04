@@ -26,11 +26,9 @@ type Category = {
   items: ProductItem[];
 };
 
-type CatalogPageProps = {
-  searchParams?: {
-    chevron?: string;
-    keychain?: string;
-  };
+type SearchParams = {
+  chevron?: string;
+  keychain?: string;
 };
 
 function formatFileName(fileName: string) {
@@ -137,7 +135,7 @@ function fileExists(filePath: string) {
   return fs.existsSync(filePath);
 }
 
-function getStickerpackItems(productsPath: string): ProductItem[] {
+function getStickerpackItems(): ProductItem[] {
   const stickerpacks: ProductItem[] = [
     {
       id: "stickerpacks-corvus-red",
@@ -179,17 +177,17 @@ function getStickerpackItems(productsPath: string): ProductItem[] {
 }
 
 function buildVariantHref(
-  currentSearchParams: CatalogPageProps["searchParams"],
+  currentSearchParams: SearchParams,
   key: "chevron" | "keychain",
   value: string
 ) {
   const params = new URLSearchParams();
 
-  if (currentSearchParams?.chevron) {
+  if (currentSearchParams.chevron) {
     params.set("chevron", currentSearchParams.chevron);
   }
 
-  if (currentSearchParams?.keychain) {
+  if (currentSearchParams.keychain) {
     params.set("keychain", currentSearchParams.keychain);
   }
 
@@ -199,7 +197,13 @@ function buildVariantHref(
   return query ? `/catalog?${query}` : "/catalog";
 }
 
-export default function CatalogPage({ searchParams }: CatalogPageProps) {
+export default async function CatalogPage({
+  searchParams,
+}: {
+  searchParams?: Promise<SearchParams>;
+}) {
+  const resolvedSearchParams = (await searchParams) ?? {};
+
   const productsPath = path.join(process.cwd(), "public", "products");
   const flagsPath = path.join(process.cwd(), "public", "flags");
 
@@ -225,13 +229,15 @@ export default function CatalogPage({ searchParams }: CatalogPageProps) {
     keychainFolderA.length > 0 ? keychainFolderA : keychainFolderB;
 
   const selectedChevronValue =
-    searchParams?.chevron && patchVariants.some((v) => v.value === searchParams.chevron)
-      ? searchParams.chevron
+    resolvedSearchParams.chevron &&
+    patchVariants.some((v) => v.value === resolvedSearchParams.chevron)
+      ? resolvedSearchParams.chevron
       : patchVariants[0]?.value;
 
   const selectedKeychainValue =
-    searchParams?.keychain && keychainVariants.some((v) => v.value === searchParams.keychain)
-      ? searchParams.keychain
+    resolvedSearchParams.keychain &&
+    keychainVariants.some((v) => v.value === resolvedSearchParams.keychain)
+      ? resolvedSearchParams.keychain
       : keychainVariants[0]?.value;
 
   const selectedChevronVariant = patchVariants.find(
@@ -242,7 +248,7 @@ export default function CatalogPage({ searchParams }: CatalogPageProps) {
     (v) => v.value === selectedKeychainValue
   );
 
-  const stickerpackItems = getStickerpackItems(productsPath);
+  const stickerpackItems = getStickerpackItems();
 
   const categories: Category[] = [
     {
@@ -290,9 +296,7 @@ export default function CatalogPage({ searchParams }: CatalogPageProps) {
                 id: "keychain-main",
                 name: "Брелок",
                 image: selectedKeychainVariant?.image || keychainVariants[0].image,
-                price: keychainVariants[0]
-                  ? getPrice("keychains")
-                  : 250,
+                price: 250,
                 description: "Оберіть колір кнопками нижче.",
                 variants: keychainVariants,
                 variantParamKey: "keychain",
@@ -459,7 +463,7 @@ export default function CatalogPage({ searchParams }: CatalogPageProps) {
                                 <Link
                                   key={variant.value}
                                   href={buildVariantHref(
-                                    searchParams,
+                                    resolvedSearchParams,
                                     item.variantParamKey as "chevron" | "keychain",
                                     variant.value
                                   )}
