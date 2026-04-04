@@ -1,314 +1,305 @@
-import Image from "next/image";
-import fs from "fs";
-import path from "path";
-import AddToCartButton from "../components/AddToCartButton";
+"use client";
 
-type ProductItem = {
+import { useState } from "react";
+
+type Product = {
   id: string;
   name: string;
-  image: string;
-  price: number;
-  description?: string;
+  price: string;
+  description: string;
+  variants: {
+    label: string;
+    image: string;
+  }[];
 };
 
-type Category = {
-  title: string;
-  items: ProductItem[];
-};
-
-function formatFileName(fileName: string) {
-  const clean = fileName
-    .replace(/\.(jpg|jpeg|png|webp)$/i, "")
-    .replace(/[_-]/g, " ")
-    .toLowerCase();
-
-  const translations: Record<string, string> = {
-    blue: "Брелок синій",
-    green: "Брелок зелений",
-    pink: "Брелок рожевий",
-    red: "Брелок червоний",
-    white: "Брелок білий",
-    black: "Брелок чорний",
-    chevron: "Шеврон",
-  };
-
-  return translations[clean] || clean.charAt(0).toUpperCase() + clean.slice(1);
-}
-
-function getPrice(category: string) {
-  const prices: Record<string, number> = {
-    chevrons: 300,
-    keychain: 250,
-    keychains: 250,
-    stickerpacks: 400,
-    flags: 950,
-    tshirts: 1500,
-  };
-
-  return prices[category] ?? 0;
-}
-
-function getFiles(
-  folderPath: string,
-  publicPath: string,
-  categoryKey: string
-): ProductItem[] {
-  if (!fs.existsSync(folderPath)) return [];
-
-  return fs
-    .readdirSync(folderPath)
-    .filter((file) => /\.(jpg|jpeg|png|webp)$/i.test(file))
-    .map((file) => ({
-      id: `${categoryKey}-${file}`,
-      name: formatFileName(file),
-      image: `${publicPath}/${file}`,
-      price: getPrice(categoryKey),
-    }));
-}
-
-function fileExists(filePath: string) {
-  return fs.existsSync(filePath);
-}
-
-function getStickerpackItems(productsPath: string): ProductItem[] {
-  const stickerpacksPath = path.join(productsPath, "stickerpacks");
-
-  const stickerpacks: ProductItem[] = [
-    {
-      id: "stickerpacks-corvus-red",
-      name: "CORVUS FPV Red — Червоний удар",
-      image: "/products/stickerpacks/corvus-red.jpg",
-      price: 400,
-      description: "Червоно-чорний стікерпак із бойовим характером та агресивним стилем.",
-    },
-    {
-      id: "stickerpacks-corvus-pink",
-      name: "CORVUS FPV Pink — Рожевий штурм",
-      image: "/products/stickerpacks/corvus-pink.jpg",
-      price: 400,
-      description: "Яскравий FPV-набір із рожевими акцентами, силою та стильним вайбом.",
-    },
-    {
-      id: "stickerpacks-corvus-blue",
-      name: "CORVUS FPV Blue — Синя домінація",
-      image: "/products/stickerpacks/corvus-blue.jpg",
-      price: 400,
-      description: "Холодний синій дизайн у технологічному стилі для фанів CORVUS.",
-    },
-    {
-      id: "stickerpacks-nrk-unit",
-      name: "NRK UNIT — Наземний контроль",
-      image: "/products/stickerpacks/nrk-unit.jpg",
-      price: 400,
-      description: "Потужний стікерпак у стилі ground control, техніки та жорсткого характеру.",
-    },
-  ];
-
-  return stickerpacks.filter((item) =>
-    fileExists(path.join(process.cwd(), "public", item.image.replace(/^\//, "")))
-  );
-}
+const products: Product[] = [
+  {
+    id: "chevron",
+    name: "Шеврон Corvus",
+    price: "250 грн",
+    description: "Оберіть варіант кольору для шеврона.",
+    variants: [
+      {
+        label: "pink",
+        image: "/products/patches/chevron1.jpg",
+      },
+      {
+        label: "black&white",
+        image: "/products/patches/chevron2.jpg",
+      },
+    ],
+  },
+  {
+    id: "keychain",
+    name: "Брелок Corvus",
+    price: "200 грн",
+    description: "Оберіть варіант кольору для брелка.",
+    variants: [
+      {
+        label: "Синій",
+        image: "/products/keychains/blue.jpg",
+      },
+      {
+        label: "Зелений",
+        image: "/products/keychains/green.jpg",
+      },{
+        label: "Рожевий",
+        image: "/products/keychains/pink.jpg",
+      },{
+        label: "Червоний",
+        image: "/products/keychains/red.jpg",
+      },{
+        label: "Білий",
+        image: "/products/keychains/white.jpg",
+      },
+    ],
+  },
+  {
+    id: "tshirt",
+    name: "Футболка Corvus",
+    price: "900 грн",
+    description: "Базова футболка підрозділу Corvus.",
+    variants: [
+      {
+        label: "Стандарт",
+        image: "/products/tshirt.jpg",
+      },
+    ],
+  },
+  {
+    id: "hoodie",
+    name: "Худі Corvus",
+    price: "1600 грн",
+    description: "Тепле худі з брендингом Corvus.",
+    variants: [
+      {
+        label: "Стандарт",
+        image: "/products/hoodie.jpg",
+      },
+    ],
+  },
+];
 
 export default function CatalogPage() {
-  const productsPath = path.join(process.cwd(), "public", "products");
-  const flagsPath = path.join(process.cwd(), "public", "flags");
+  const [selectedVariants, setSelectedVariants] = useState<Record<string, number>>({
+    chevron: 0,
+    keychain: 0,
+    tshirt: 0,
+    hoodie: 0,
+  });
 
-  const keychainItems = getFiles(
-    path.join(productsPath, "keychain"),
-    "/products/keychain",
-    "keychain"
-  );
-
-  const keychainsItems = getFiles(
-    path.join(productsPath, "keychains"),
-    "/products/keychains",
-    "keychains"
-  );
-
-  const stickerpackItems = getStickerpackItems(productsPath);
-
-  const categories: Category[] = [
-    {
-      title: "Шеврони",
-      items: fs.existsSync(path.join(productsPath, "chevron.jpg"))
-        ? [
-            {
-              id: "chevrons-chevron.jpg",
-              name: "Шеврон",
-              image: "/products/chevron.jpg",
-              price: 300,
-            },
-          ]
-        : fs.existsSync(path.join(productsPath, "chevron.png"))
-        ? [
-            {
-              id: "chevrons-chevron.png",
-              name: "Шеврон",
-              image: "/products/chevron.png",
-              price: 300,
-            },
-          ]
-        : [],
-    },
-    {
-      title: "Брелки",
-      items: keychainItems.length > 0 ? keychainItems : keychainsItems,
-    },
-    {
-      title: "Стікерпаки",
-      items: stickerpackItems,
-    },
-    {
-      title: "Прапори",
-      items: getFiles(flagsPath, "/flags", "flags"),
-    },
-    {
-      title: "Футболки",
-      items: getFiles(
-        path.join(productsPath, "tshirts"),
-        "/products/tshirts",
-        "tshirts"
-      ),
-    },
-  ];
+  const handleVariantChange = (productId: string, variantIndex: number) => {
+    setSelectedVariants((prev) => ({
+      ...prev,
+      [productId]: variantIndex,
+    }));
+  };
 
   return (
     <main
       style={{
         minHeight: "100vh",
-        background: "#0a0a0a",
+        background: "#000",
         color: "#fff",
-        padding: "40px 20px",
+        padding: "80px 20px",
       }}
     >
-      <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-        <h1 style={{ fontSize: "40px", fontWeight: 800, marginBottom: "10px" }}>
-          Каталог Corvus
+      <div
+        style={{
+          maxWidth: "1200px",
+          margin: "0 auto",
+        }}
+      >
+        <h1
+          style={{
+            fontSize: "clamp(36px, 5vw, 56px)",
+            fontWeight: 800,
+            marginBottom: "16px",
+            textAlign: "center",
+          }}
+        >
+          Каталог
         </h1>
 
-        <p style={{ color: "#aaa", marginBottom: "40px" }}>
-          Наш мерч та символіка
+        <p
+          style={{
+            color: "#bdbdbd",
+            textAlign: "center",
+            maxWidth: "760px",
+            margin: "0 auto 50px auto",
+            lineHeight: 1.6,
+            fontSize: "16px",
+          }}
+        >
+          У каталозі показуються всі товари. Для шеврона та брелка можна
+          перемикати зображення кнопками варіантів.
         </p>
 
-        {categories.map((category) => (
-          <section key={category.title} style={{ marginBottom: "50px" }}>
-            <h2
-              style={{
-                fontSize: "24px",
-                fontWeight: 700,
-                marginBottom: "20px",
-                borderLeft: "4px solid #ff4da6",
-                paddingLeft: "10px",
-              }}
-            >
-              {category.title}
-            </h2>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+            gap: "24px",
+          }}
+        >
+          {products.map((product) => {
+            const selectedIndex = selectedVariants[product.id] ?? 0;
+            const currentVariant = product.variants[selectedIndex];
 
-            {category.items.length === 0 ? (
-              <p style={{ color: "#777" }}>Поки немає товарів</p>
-            ) : (
+            return (
               <div
+                key={product.id}
                 style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fill, 220px)",
-                  gap: "18px",
+                  background: "#0d0d0d",
+                  border: "1px solid #1b1b1b",
+                  borderRadius: "24px",
+                  overflow: "hidden",
+                  display: "flex",
+                  flexDirection: "column",
                 }}
               >
-                {category.items.map((item) => (
-                  <div
-                    key={item.id}
+                <div
+                  style={{
+                    background: "#111",
+                    padding: "20px",
+                    minHeight: "320px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <img
+                    src={currentVariant.image}
+                    alt={product.name}
                     style={{
-                      width: "220px",
-                      background: "#111",
-                      borderRadius: "14px",
-                      padding: "12px",
-                      border: "1px solid #1f1f1f",
+                      width: "100%",
+                      maxWidth: "260px",
+                      height: "auto",
+                      objectFit: "contain",
+                      borderRadius: "16px",
                     }}
-                  >
-                    <a
-                      href={item.image}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                  />
+                </div>
+
+                <div
+                  style={{
+                    padding: "22px",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "14px",
+                  }}
+                >
+                  <div>
+                    <h2
                       style={{
-                        display: "block",
-                        textDecoration: "none",
+                        fontSize: "24px",
+                        fontWeight: 800,
+                        margin: "0 0 8px 0",
                       }}
-                      title="Відкрити фото"
                     >
-                      <div
-                        style={{
-                          position: "relative",
-                          width: "196px",
-                          height: "196px",
-                          borderRadius: "10px",
-                          overflow: "hidden",
-                          margin: "0 auto",
-                          cursor: "zoom-in",
-                        }}
-                      >
-                        <Image
-                          src={item.image}
-                          alt={item.name}
-                          fill
-                          style={{ objectFit: "cover" }}
-                        />
-                      </div>
-                    </a>
+                      {product.name}
+                    </h2>
 
-                    <div style={{ paddingTop: "12px" }}>
-                      <div
-                        style={{
-                          fontSize: "14px",
-                          fontWeight: 700,
-                          textAlign: "center",
-                          minHeight: "40px",
-                          lineHeight: 1.3,
-                        }}
-                      >
-                        {item.name}
-                      </div>
-
-                      {item.description && (
-                        <div
-                          style={{
-                            textAlign: "center",
-                            color: "#aaa",
-                            fontSize: "12px",
-                            lineHeight: 1.4,
-                            minHeight: "52px",
-                            marginTop: "8px",
-                          }}
-                        >
-                          {item.description}
-                        </div>
-                      )}
-
-                      <div
-                        style={{
-                          textAlign: "center",
-                          color: "#ff4da6",
-                          fontWeight: 700,
-                          fontSize: "15px",
-                          marginTop: "8px",
-                        }}
-                      >
-                        {item.price} грн
-                      </div>
-
-                      <AddToCartButton
-                        id={item.id}
-                        name={item.name}
-                        image={item.image}
-                        price={item.price}
-                      />
+                    <div
+                      style={{
+                        color: "#ff4da6",
+                        fontWeight: 700,
+                        marginBottom: "10px",
+                      }}
+                    >
+                      {product.price}
                     </div>
+
+                    <p
+                      style={{
+                        color: "#c8c8c8",
+                        lineHeight: 1.6,
+                        fontSize: "15px",
+                        margin: 0,
+                      }}
+                    >
+                      {product.description}
+                    </p>
                   </div>
-                ))}
+
+                  {product.variants.length > 1 && (
+                    <div>
+                      <div
+                        style={{
+                          fontSize: "13px",
+                          color: "#8d8d8d",
+                          marginBottom: "10px",
+                          textTransform: "uppercase",
+                          letterSpacing: "0.08em",
+                        }}
+                      >
+                        Вибір кольору
+                      </div>
+
+                      <div
+                        style={{
+                          display: "flex",
+                          flexWrap: "wrap",
+                          gap: "10px",
+                        }}
+                      >
+                        {product.variants.map((variant, index) => (
+                          <button
+                            key={variant.label}
+                            onClick={() =>
+                              handleVariantChange(product.id, index)
+                            }
+                            style={{
+                              ...colorButton,
+                              ...(selectedIndex === index
+                                ? activeColorButton
+                                : {}),
+                            }}
+                          >
+                            {variant.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  <button style={buyButton}>Замовити</button>
+                </div>
               </div>
-            )}
-          </section>
-        ))}
+            );
+          })}
+        </div>
       </div>
     </main>
   );
 }
+
+const colorButton: React.CSSProperties = {
+  padding: "10px 14px",
+  borderRadius: "12px",
+  border: "1px solid #2a2a2a",
+  background: "#111",
+  color: "#fff",
+  cursor: "pointer",
+  fontWeight: 700,
+  fontSize: "14px",
+};
+
+const activeColorButton: React.CSSProperties = {
+  border: "1px solid #ff4da6",
+  background: "#1a1a1a",
+  boxShadow: "0 0 0 1px #ff4da6 inset",
+};
+
+const buyButton: React.CSSProperties = {
+  padding: "14px 18px",
+  borderRadius: "12px",
+  border: "none",
+  background: "#ff4da6",
+  color: "#fff",
+  cursor: "pointer",
+  fontWeight: 700,
+  fontSize: "15px",
+  marginTop: "6px",
+};
