@@ -94,11 +94,11 @@ function formatVariantLabel(fileName: string, group: string) {
 function getPrice(category: string) {
   const prices: Record<string, number> = {
     patches: 300,
-    chevrons: 300,
+    chevrons: 400,
     keychain: 250,
     keychains: 250,
-    stickerpacks: 400,
-    flags: 950,
+    stickerpacks: 450,
+    flags: 1500,
     tshirts: 1500,
   };
 

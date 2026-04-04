@@ -58,11 +58,13 @@ function ProductCard({ item }: { item: CatalogProduct }) {
   return (
     <div
       style={{
-        width: "220px",
+        width: "280px",
+        minWidth: "280px",
         background: "#111",
-        borderRadius: "14px",
-        padding: "12px",
+        borderRadius: "16px",
+        padding: "14px",
         border: "1px solid #1f1f1f",
+        flexShrink: 0,
       }}
     >
       <a
@@ -73,36 +75,40 @@ function ProductCard({ item }: { item: CatalogProduct }) {
           display: "block",
           textDecoration: "none",
         }}
-        title="Відкрити фото"
+        title="Відкрити фото у повному розмірі"
       >
         <div
           style={{
             position: "relative",
-            width: "196px",
-            height: "196px",
-            borderRadius: "10px",
+            width: "100%",
+            height: "240px",
+            borderRadius: "12px",
             overflow: "hidden",
             margin: "0 auto",
             cursor: "zoom-in",
             background: "#0d0d0d",
+            border: "1px solid #1b1b1b",
           }}
         >
           <Image
             src={currentImage}
             alt={cartName}
             fill
-            style={{ objectFit: "cover" }}
+            style={{
+              objectFit: "contain",
+              padding: "10px",
+            }}
           />
         </div>
       </a>
 
-      <div style={{ paddingTop: "12px" }}>
+      <div style={{ paddingTop: "14px" }}>
         <div
           style={{
-            fontSize: "14px",
+            fontSize: "15px",
             fontWeight: 700,
             textAlign: "center",
-            minHeight: "40px",
+            minHeight: "42px",
             lineHeight: 1.3,
           }}
         >
@@ -116,7 +122,7 @@ function ProductCard({ item }: { item: CatalogProduct }) {
               color: "#aaa",
               fontSize: "12px",
               lineHeight: 1.4,
-              minHeight: isGrouped ? "34px" : "52px",
+              minHeight: isGrouped ? "36px" : "54px",
               marginTop: "8px",
             }}
           >
@@ -131,8 +137,8 @@ function ProductCard({ item }: { item: CatalogProduct }) {
               flexWrap: "wrap",
               gap: "8px",
               justifyContent: "center",
-              marginTop: "10px",
-              marginBottom: "10px",
+              marginTop: "12px",
+              marginBottom: "12px",
             }}
           >
             {item.variants.map((variant, index) => {
@@ -144,7 +150,7 @@ function ProductCard({ item }: { item: CatalogProduct }) {
                   type="button"
                   onClick={() => setSelectedIndex(index)}
                   style={{
-                    padding: "6px 10px",
+                    padding: "7px 11px",
                     borderRadius: "999px",
                     fontSize: "12px",
                     fontWeight: 700,
@@ -154,6 +160,7 @@ function ProductCard({ item }: { item: CatalogProduct }) {
                       : "1px solid #2b2b2b",
                     background: isActive ? "#2a1020" : "#181818",
                     cursor: "pointer",
+                    transition: "0.2s ease",
                   }}
                 >
                   {variant.label}
@@ -168,19 +175,21 @@ function ProductCard({ item }: { item: CatalogProduct }) {
             textAlign: "center",
             color: "#ff4da6",
             fontWeight: 700,
-            fontSize: "15px",
+            fontSize: "16px",
             marginTop: "8px",
           }}
         >
           {item.price} грн
         </div>
 
-        <AddToCartButton
-          id={cartId}
-          name={cartName}
-          image={currentImage}
-          price={item.price}
-        />
+        <div style={{ marginTop: "12px" }}>
+          <AddToCartButton
+            id={cartId}
+            name={cartName}
+            image={currentImage}
+            price={item.price}
+          />
+        </div>
       </div>
     </div>
   );
@@ -196,7 +205,7 @@ export default function CatalogClient({ categories }: Props) {
         padding: "40px 20px",
       }}
     >
-      <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+      <div style={{ maxWidth: "1400px", margin: "0 auto" }}>
         <h1 style={{ fontSize: "40px", fontWeight: 800, marginBottom: "10px" }}>
           Каталог Corvus
         </h1>
@@ -206,7 +215,7 @@ export default function CatalogClient({ categories }: Props) {
         </p>
 
         {categories.map((category) => (
-          <section key={category.title} style={{ marginBottom: "50px" }}>
+          <section key={category.title} style={{ marginBottom: "56px" }}>
             <h2
               style={{
                 fontSize: "24px",
@@ -224,9 +233,11 @@ export default function CatalogClient({ categories }: Props) {
             ) : (
               <div
                 style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fill, 220px)",
+                  display: "flex",
                   gap: "18px",
+                  overflowX: "auto",
+                  paddingBottom: "8px",
+                  scrollBehavior: "smooth",
                 }}
               >
                 {category.items.map((item) => (
