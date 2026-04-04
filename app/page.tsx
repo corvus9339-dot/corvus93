@@ -13,8 +13,8 @@ export default function HomePage() {
   const [selectedColor, setSelectedColor] = useState<ColorOption>("color1");
 
   const colorImages: Record<ColorOption, string> = {
-    color1: "/patches/chevron1.jpg",
-    color2: "/patches/chevron2.jpg",
+    color1: "/products/patches/chevron1.jpg",
+    color2: "/produkts/patches/chevron2.jpg",
   };
 
   return (
