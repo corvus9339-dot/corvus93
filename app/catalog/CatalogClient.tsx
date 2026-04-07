@@ -8,6 +8,7 @@ export type CatalogVariant = {
   id: string;
   label: string;
   image: string;
+  price?: number;
 };
 
 export type CatalogProduct =
@@ -47,6 +48,11 @@ function ProductCard({ item }: { item: CatalogProduct }) {
     : item.image;
 
   const currentLabel = isGrouped ? item.variants[selectedIndex]?.label : null;
+
+  const currentPrice =
+    isGrouped && item.variants[selectedIndex]?.price
+      ? item.variants[selectedIndex].price
+      : item.price;
 
   const cartId = isGrouped
     ? `${item.id}-${item.variants[selectedIndex]?.id || "default"}`
@@ -150,6 +156,7 @@ function ProductCard({ item }: { item: CatalogProduct }) {
               return (
                 <button
                   key={variant.id}
+                  type="button"
                   onClick={() => setSelectedIndex(index)}
                   style={{
                     padding: "6px 10px",
@@ -179,7 +186,7 @@ function ProductCard({ item }: { item: CatalogProduct }) {
             marginTop: "10px",
           }}
         >
-          {item.price} грн
+          {currentPrice} грн
         </div>
 
         <div style={{ marginTop: "10px" }}>
@@ -187,7 +194,7 @@ function ProductCard({ item }: { item: CatalogProduct }) {
             id={cartId}
             name={cartName}
             image={currentImage}
-            price={item.price}
+            price={currentPrice}
           />
         </div>
       </div>

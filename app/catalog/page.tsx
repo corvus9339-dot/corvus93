@@ -134,11 +134,23 @@ function getVariants(
   return fs
     .readdirSync(folderPath)
     .filter((file) => /\.(jpg|jpeg|png|webp)$/i.test(file))
-    .map((file) => ({
-      id: file.replace(/\.(jpg|jpeg|png|webp)$/i, ""),
-      label: formatVariantLabel(file, group),
-      image: `${publicPath}/${file}`,
-    }));
+    .map((file) => {
+      const id = file.replace(/\.(jpg|jpeg|png|webp)$/i, "");
+
+      let price: number | undefined = undefined;
+
+      if (group === "patches") {
+        if (id === "chevron1") price = 300;
+        if (id === "chevron2") price = 400;
+      }
+
+      return {
+        id,
+        label: formatVariantLabel(file, group),
+        image: `${publicPath}/${file}`,
+        price,
+      };
+    });
 }
 
 export default function CatalogPage() {
